@@ -1,0 +1,794 @@
+<div class="container">
+	<div class="sidebar">
+		<app-sidebar></app-sidebar>
+	</div>
+	
+	<div class="content">
+        <div class="main-content">
+            <div class="container-fluid">
+                <div class="row justify-content-center">
+                    <div class="col-auto">
+                        <!-- Header -->
+                        <div class="header mt-md-5">
+                            <div class="header-body">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <!-- Pretitle -->
+                                        <h6 class="header-pretitle">Módulo</h6>
+        
+                                        <!-- Title -->
+                                        <h1 class="header-title">Detalle de Estudiante</h1>
+                                    </div>
+                                </div>
+                                <!-- / .row -->
+                            </div>
+                        </div>
+        
+                        <!-- Alert -->
+        
+                        <ng-container *ngIf="!load_data">
+                            <ng-container *ngIf="pago != undefined">
+                                <!-- Card -->
+                                <div class="card mb-5">
+                                    <div class="card-header">
+                                        <!-- Title -->
+                                        <h4 class="card-header-title">Estudiante #{{ estudiante._id }}</h4>
+        
+                                        <a [routerLink]="['/estudiantes']">Regresar</a>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <table class="table mb-0">
+                                                    <tbody>
+                                                        <tr *ngIf="estudiante">
+                                                            <th class="border-0 py-2 pl-0">Estudiante:</th>
+                                                            <td class="border-0 py-2 px-0 text-muted">
+                                                                {{ estudiante.nombres }} {{ estudiante.apellidos }}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="border-0 py-2 pl-0">Cédual No:</th>
+                                                            <td class="border-0 py-2 px-0 text-muted">{{ estudiante.dni }}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <table class="table mb-0">
+                                                    <tbody>
+                                                        <tr>
+                                                            <th class="border-0 py-2 pl-0">Email:</th>
+                                                            <td class="border-0 py-2 px-0 text-muted">{{ estudiante.email }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="border-0 py-2 pl-0">Teléfono:</th>
+                                                            <td class="border-0 py-2 px-0 text-muted">{{ estudiante.telefono }}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <ng-container *ngIf="load_todapension == true">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <ng-container>
+                                                <button
+                                                    class="btn btn-primary text-white mr-3"
+                                                    style="cursor: pointer"
+                                                    *ngFor="let pen of pensionesestudiante; let val = index"
+                                                    (click)="detalle_data(val)"
+                                                    value="val"
+                                                >
+                                                    {{ pen.anio_lectivo | date : 'YYYY' }} {{ pen.curso }}{{ pen.paralelo }}
+                                                </button>
+                                            </ng-container>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                                <ng-container *ngIf="load_todapension == false">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-12 text-center">
+                                                <div class="spinner-border" style="width: 3rem; height: 3rem" role="status">
+                                                    <span class="visually-hidden"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-container>
+        
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table mb-0">
+                                                <tbody *ngIf="load_pension == true">
+                                                    <tr *ngFor="let item of pagopension; let idx = index">
+                                                        <td
+                                                            class="border-top-1"
+                                                            *ngIf="item.estado == 'Pago atrasado'"
+                                                            style="background-color: #e0ae4398; margin-left: 1rem"
+                                                        >
+                                                            <div class="media pl-2 py-2">
+                                                                <div class="media-body pl-3">
+                                                                    <h4 class="font-size-sm mb-3">
+                                                                        <a
+                                                                            style="cursor: pointer"
+                                                                            class="nav-link font-weight-bold"
+                                                                            *ngIf="item.date != 'Matricula'"
+                                                                        >
+                                                                            Pensión {{ idx }} {{ item.date | date : 'MMMM' }}
+                                                                            {{ item.date | date : 'YYYY' }}
+                                                                        </a>
+                                                                        <a
+                                                                            style="cursor: pointer"
+                                                                            class="nav-link font-weight-bold"
+                                                                            *ngIf="item.date == 'Matricula'"
+                                                                        >
+                                                                            {{ item.date }}</a
+                                                                        >
+                                                                    </h4>
+                                                                    <ul class="list-unstyled font-size-xs mt-n2 mb-2" style="margin-left: 1rem">
+                                                                        <ng-container
+                                                                            *ngIf="pensionesestudiante[idexpension].matricula == 0 || item.valor != 0"
+                                                                        >
+                                                                            <li class="mb-0" *ngIf="item.date == 'Matricula'">
+                                                                                <span class="text-muted"
+                                                                                    >Valor a pagar:
+                                                                                    {{ config.matricula - item.valor | currency : 'USD' }}</span
+                                                                                >
+                                                                            </li>
+                                                                        </ng-container>
+                                                                        <ng-container
+                                                                            *ngIf="pensionesestudiante[idexpension].matricula == 1 && item.valor == 0"
+                                                                        >
+                                                                            <li class="mb-0" *ngIf="item.date == 'Matricula'">
+                                                                                <span class="text-muted">Cubierto por Beca</span>
+                                                                            </li>
+                                                                        </ng-container>
+                                                                        <ng-container *ngIf="item.date != 'Matricula'">
+                                                                            <li class="mb-0">
+                                                                                <span class="text-muted"
+                                                                                    >Valor a pagar: {{ item.porpagar | currency : 'USD' }}</span
+                                                                                >
+                                                                            </li>
+                                                                        </ng-container>
+                                                                    </ul>
+                                                                    <span
+                                                                        *ngIf="item.estado == 'Pago atrasado Abono'"
+                                                                        class="badge badge-warning"
+                                                                        style="background-color: #f1ee51; margin-left: 1rem"
+                                                                        >{{ item.estado }}</span
+                                                                    >
+                                                                    <span
+                                                                        *ngIf="item.estado == 'Pago anticipado Abono'"
+                                                                        class="badge badge-warning"
+                                                                        style="background-color: #469df4; margin-left: 1rem"
+                                                                        >{{ item.estado }}</span
+                                                                    >
+                                                                    <span
+                                                                        *ngIf="item.estado == 'Pago a tiempo Abono'"
+                                                                        class="badge badge-warning"
+                                                                        style="background-color: #67fa49; margin-left: 1rem"
+                                                                        >{{ item.estado }}</span
+                                                                    >
+                                                                    <span
+                                                                        *ngIf="item.beca == 1 && item.pago.length > 0"
+                                                                        class="badge badge-warning"
+                                                                        style="background-color: #ff8b32; margin-left: 1rem"
+                                                                        >(Beca usado)</span
+                                                                    >
+                                                                    <span
+                                                                        *ngIf="item.beca == 1 && item.pago.length == 0"
+                                                                        class="badge badge-warning"
+                                                                        style="background-color: #e05cfd; margin-left: 1rem"
+                                                                        >(Beca)</span
+                                                                    >
+                                                                </div>
+                                                            </div>
+                                                        </td>
+        
+                                                        <td
+                                                            class="border-top-1"
+                                                            *ngIf="item.estado == 'Pago atrasado Abono'"
+                                                            style="background-color: #e0ae43; margin-left: 1rem"
+                                                        >
+                                                            <div class="media pl-2 py-2">
+                                                                <div class="media-body pl-3">
+                                                                    <h4 class="font-size-sm mb-3">
+                                                                        <a
+                                                                            style="cursor: pointer"
+                                                                            class="nav-link font-weight-bold"
+                                                                            *ngIf="item.date != 'Matricula'"
+                                                                        >
+                                                                            Pensión {{ idx }} {{ item.date | date : 'MMMM' }}
+                                                                            {{ item.date | date : 'YYYY' }}
+                                                                        </a>
+                                                                        <a
+                                                                            style="cursor: pointer"
+                                                                            class="nav-link font-weight-bold"
+                                                                            *ngIf="item.date == 'Matricula'"
+                                                                        >
+                                                                            {{ item.date }}</a
+                                                                        >
+                                                                    </h4>
+                                                                    <ul class="list-unstyled font-size-xs mt-n2 mb-2" style="margin-left: 1rem">
+                                                                        <ng-container
+                                                                            *ngIf="pensionesestudiante[idexpension].matricula == 0 || item.valor != 0"
+                                                                        >
+                                                                            <li class="mb-0" *ngIf="item.date == 'Matricula'">
+                                                                                <span class="text-muted"
+                                                                                    >Valor a pagar:
+                                                                                    {{ config.matricula - item.valor | currency : 'USD' }}</span
+                                                                                >
+                                                                            </li>
+                                                                        </ng-container>
+                                                                        <ng-container
+                                                                            *ngIf="pensionesestudiante[idexpension].matricula == 1 && item.valor == 0"
+                                                                        >
+                                                                            <li class="mb-0" *ngIf="item.date == 'Matricula'">
+                                                                                <span class="text-muted">Cubierto por Beca</span>
+                                                                            </li>
+                                                                        </ng-container>
+                                                                        <ng-container *ngIf="item.date != 'Matricula'">
+                                                                            <li class="mb-0">
+                                                                                <span class="text-muted"
+                                                                                    >Valor a pagar: {{ item.porpagar | currency : 'USD' }}</span
+                                                                                >
+                                                                            </li>
+                                                                        </ng-container>
+                                                                    </ul>
+                                                                    <span
+                                                                        *ngIf="item.estado == 'Pago atrasado Abono'"
+                                                                        class="badge badge-warning"
+                                                                        style="background-color: #f1ee51; margin-left: 1rem"
+                                                                        >{{ item.estado }}</span
+                                                                    >
+                                                                    <span
+                                                                        *ngIf="item.estado == 'Pago anticipado Abono'"
+                                                                        class="badge badge-warning"
+                                                                        style="background-color: #469df4; margin-left: 1rem"
+                                                                        >{{ item.estado }}</span
+                                                                    >
+                                                                    <span
+                                                                        *ngIf="item.estado == 'Pago a tiempo Abono'"
+                                                                        class="badge badge-warning"
+                                                                        style="background-color: #67fa49; margin-left: 1rem"
+                                                                        >{{ item.estado }}</span
+                                                                    >
+                                                                    <span
+                                                                        *ngIf="item.beca == 1 && item.pago.length > 0"
+                                                                        class="badge badge-warning"
+                                                                        style="background-color: #ff8b32; margin-left: 1rem"
+                                                                        >(Beca usado)</span
+                                                                    >
+                                                                    <span
+                                                                        *ngIf="item.beca == 1 && item.pago.length == 0"
+                                                                        class="badge badge-warning"
+                                                                        style="background-color: #e05cfd; margin-left: 1rem"
+                                                                        >(Beca)</span
+                                                                    >
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td
+                                                            class="border-top-1"
+                                                            *ngIf="item.estado == 'Pago anticipado'"
+                                                            style="background-color: #ca89f58c; margin-left: 1rem"
+                                                        >
+                                                            <div class="media pl-2 py-2">
+                                                                <div class="media-body pl-3">
+                                                                    <h4 class="font-size-sm mb-3">
+                                                                        <a
+                                                                            style="cursor: pointer"
+                                                                            class="nav-link font-weight-bold"
+                                                                            *ngIf="item.date != 'Matricula'"
+                                                                        >
+                                                                            Pensión {{ idx }} {{ item.date | date : 'MMMM' }}
+                                                                            {{ item.date | date : 'YYYY' }}
+                                                                        </a>
+                                                                        <a
+                                                                            style="cursor: pointer"
+                                                                            class="nav-link font-weight-bold"
+                                                                            *ngIf="item.date == 'Matricula'"
+                                                                        >
+                                                                            {{ item.date }}</a
+                                                                        >
+                                                                    </h4>
+                                                                    <ul class="list-unstyled font-size-xs mt-n2 mb-2" style="margin-left: 1rem">
+                                                                        <ng-container
+                                                                            *ngIf="pensionesestudiante[idexpension].matricula == 0 || item.valor != 0"
+                                                                        >
+                                                                            <li class="mb-0" *ngIf="item.date == 'Matricula'">
+                                                                                <span class="text-muted"
+                                                                                    >Valor a pagar:
+                                                                                    {{ config.matricula - item.valor | currency : 'USD' }}</span
+                                                                                >
+                                                                            </li>
+                                                                        </ng-container>
+                                                                        <ng-container
+                                                                            *ngIf="pensionesestudiante[idexpension].matricula == 1 && item.valor == 0"
+                                                                        >
+                                                                            <li class="mb-0" *ngIf="item.date == 'Matricula'">
+                                                                                <span class="text-muted">Cubierto por Beca</span>
+                                                                            </li>
+                                                                        </ng-container>
+                                                                        <ng-container *ngIf="item.date != 'Matricula'">
+                                                                            <li class="mb-0">
+                                                                                <span class="text-muted"
+                                                                                    >Valor a pagar: {{ item.porpagar | currency : 'USD' }}</span
+                                                                                >
+                                                                            </li>
+                                                                        </ng-container>
+                                                                    </ul>
+                                                                    <span
+                                                                        *ngIf="item.estado == 'Pago atrasado Abono'"
+                                                                        class="badge badge-warning"
+                                                                        style="background-color: #f1ee51; margin-left: 1rem"
+                                                                        >{{ item.estado }}</span
+                                                                    >
+                                                                    <span
+                                                                        *ngIf="item.estado == 'Pago anticipado Abono'"
+                                                                        class="badge badge-warning"
+                                                                        style="background-color: #469df4; margin-left: 1rem"
+                                                                        >{{ item.estado }}</span
+                                                                    >
+                                                                    <span
+                                                                        *ngIf="item.estado == 'Pago a tiempo Abono'"
+                                                                        class="badge badge-warning"
+                                                                        style="background-color: #67fa49; margin-left: 1rem"
+                                                                        >{{ item.estado }}</span
+                                                                    >
+                                                                    <span
+                                                                        *ngIf="item.beca == 1 && item.pago.length > 0"
+                                                                        class="badge badge-warning"
+                                                                        style="background-color: #ff8b32; margin-left: 1rem"
+                                                                        >(Beca usado)</span
+                                                                    >
+                                                                    <span
+                                                                        *ngIf="item.beca == 1 && item.pago.length == 0"
+                                                                        class="badge badge-warning"
+                                                                        style="background-color: #e05cfd; margin-left: 1rem"
+                                                                        >(Beca)</span
+                                                                    >
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td
+                                                            class="border-top-1"
+                                                            *ngIf="item.estado == 'Pago anticipado Abono'"
+                                                            style="background-color: #c989f5; margin-left: 1rem"
+                                                        >
+                                                            <div class="media pl-2 py-2">
+                                                                <div class="media-body pl-3">
+                                                                    <h4 class="font-size-sm mb-3">
+                                                                        <a
+                                                                            style="cursor: pointer"
+                                                                            class="nav-link font-weight-bold"
+                                                                            *ngIf="item.date != 'Matricula'"
+                                                                        >
+                                                                            Pensión {{ idx }} {{ item.date | date : 'MMMM' }}
+                                                                            {{ item.date | date : 'YYYY' }}
+                                                                        </a>
+                                                                        <a
+                                                                            style="cursor: pointer"
+                                                                            class="nav-link font-weight-bold"
+                                                                            *ngIf="item.date == 'Matricula'"
+                                                                        >
+                                                                            {{ item.date }}</a
+                                                                        >
+                                                                    </h4>
+                                                                    <ul class="list-unstyled font-size-xs mt-n2 mb-2" style="margin-left: 1rem">
+                                                                        <ng-container
+                                                                            *ngIf="pensionesestudiante[idexpension].matricula == 0 || item.valor != 0"
+                                                                        >
+                                                                            <li class="mb-0" *ngIf="item.date == 'Matricula'">
+                                                                                <span class="text-muted"
+                                                                                    >Valor a pagar:
+                                                                                    {{ config.matricula - item.valor | currency : 'USD' }}</span
+                                                                                >
+                                                                            </li>
+                                                                        </ng-container>
+                                                                        <ng-container
+                                                                            *ngIf="pensionesestudiante[idexpension].matricula == 1 && item.valor == 0"
+                                                                        >
+                                                                            <li class="mb-0" *ngIf="item.date == 'Matricula'">
+                                                                                <span class="text-muted">Cubierto por Beca</span>
+                                                                            </li>
+                                                                        </ng-container>
+                                                                        <ng-container *ngIf="item.date != 'Matricula'">
+                                                                            <li class="mb-0">
+                                                                                <span class="text-muted"
+                                                                                    >Valor a pagar: {{ item.porpagar | currency : 'USD' }}</span
+                                                                                >
+                                                                            </li>
+                                                                        </ng-container>
+                                                                    </ul>
+                                                                    <span
+                                                                        *ngIf="item.estado == 'Pago atrasado Abono'"
+                                                                        class="badge badge-warning"
+                                                                        style="background-color: #f1ee51; margin-left: 1rem"
+                                                                        >{{ item.estado }}</span
+                                                                    >
+                                                                    <span
+                                                                        *ngIf="item.estado == 'Pago anticipado Abono'"
+                                                                        class="badge badge-warning"
+                                                                        style="background-color: #469df4; margin-left: 1rem"
+                                                                        >{{ item.estado }}</span
+                                                                    >
+                                                                    <span
+                                                                        *ngIf="item.estado == 'Pago a tiempo Abono'"
+                                                                        class="badge badge-warning"
+                                                                        style="background-color: #67fa49; margin-left: 1rem"
+                                                                        >{{ item.estado }}</span
+                                                                    >
+                                                                    <span
+                                                                        *ngIf="item.beca == 1 && item.pago.length > 0"
+                                                                        class="badge badge-warning"
+                                                                        style="background-color: #ff8b32; margin-left: 1rem"
+                                                                        >(Beca usado)</span
+                                                                    >
+                                                                    <span
+                                                                        *ngIf="item.beca == 1 && item.pago.length == 0"
+                                                                        class="badge badge-warning"
+                                                                        style="background-color: #e05cfd; margin-left: 1rem"
+                                                                        >(Beca)</span
+                                                                    >
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td
+                                                            class="border-top-1"
+                                                            *ngIf="item.estado == 'Pago a tiempo'"
+                                                            style="background-color: #3bedb89a; margin-left: 1rem"
+                                                        >
+                                                            <div class="media pl-2 py-2">
+                                                                <div class="media-body pl-3">
+                                                                    <h4 class="font-size-sm mb-3">
+                                                                        <a
+                                                                            style="cursor: pointer"
+                                                                            class="nav-link font-weight-bold"
+                                                                            *ngIf="item.date != 'Matricula'"
+                                                                        >
+                                                                            Pensión {{ idx }} {{ item.date | date : 'MMMM' }}
+                                                                            {{ item.date | date : 'YYYY' }}
+                                                                        </a>
+                                                                        <a
+                                                                            style="cursor: pointer"
+                                                                            class="nav-link font-weight-bold"
+                                                                            *ngIf="item.date == 'Matricula'"
+                                                                        >
+                                                                            {{ item.date }}</a
+                                                                        >
+                                                                    </h4>
+                                                                    <ul class="list-unstyled font-size-xs mt-n2 mb-2" style="margin-left: 1rem">
+                                                                        <ng-container
+                                                                            *ngIf="pensionesestudiante[idexpension].matricula == 0 || item.valor != 0"
+                                                                        >
+                                                                            <li class="mb-0" *ngIf="item.date == 'Matricula'">
+                                                                                <span class="text-muted"
+                                                                                    >Valor a pagar:
+                                                                                    {{ config.matricula - item.valor | currency : 'USD' }}</span
+                                                                                >
+                                                                            </li>
+                                                                        </ng-container>
+                                                                        <ng-container
+                                                                            *ngIf="pensionesestudiante[idexpension].matricula == 1 && item.valor == 0"
+                                                                        >
+                                                                            <li class="mb-0" *ngIf="item.date == 'Matricula'">
+                                                                                <span class="text-muted">Cubierto por Beca</span>
+                                                                            </li>
+                                                                        </ng-container>
+                                                                        <ng-container *ngIf="item.date != 'Matricula'">
+                                                                            <li class="mb-0">
+                                                                                <span class="text-muted"
+                                                                                    >Valor a pagar: {{ item.porpagar | currency : 'USD' }}</span
+                                                                                >
+                                                                            </li>
+                                                                        </ng-container>
+                                                                    </ul>
+                                                                    <span
+                                                                        *ngIf="item.estado == 'Pago atrasado Abono'"
+                                                                        class="badge badge-warning"
+                                                                        style="background-color: #f1ee51; margin-left: 1rem"
+                                                                        >{{ item.estado }}</span
+                                                                    >
+                                                                    <span
+                                                                        *ngIf="item.estado == 'Pago anticipado Abono'"
+                                                                        class="badge badge-warning"
+                                                                        style="background-color: #469df4; margin-left: 1rem"
+                                                                        >{{ item.estado }}</span
+                                                                    >
+                                                                    <span
+                                                                        *ngIf="item.estado == 'Pago a tiempo Abono'"
+                                                                        class="badge badge-warning"
+                                                                        style="background-color: #67fa49; margin-left: 1rem"
+                                                                        >{{ item.estado }}</span
+                                                                    >
+                                                                    <span
+                                                                        *ngIf="item.beca == 1 && item.pago.length > 0"
+                                                                        class="badge badge-warning"
+                                                                        style="background-color: #ff8b32; margin-left: 1rem"
+                                                                        >(Beca usado)</span
+                                                                    >
+                                                                    <span
+                                                                        *ngIf="item.beca == 1 && item.pago.length == 0"
+                                                                        class="badge badge-warning"
+                                                                        style="background-color: #e05cfd; margin-left: 1rem"
+                                                                        >(Beca)</span
+                                                                    >
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td
+                                                            class="border-top-1"
+                                                            *ngIf="item.estado == 'Pago a tiempo Abono'"
+                                                            style="background-color: #3bedb8; margin-left: 1rem"
+                                                        >
+                                                            <div class="media pl-2 py-2">
+                                                                <div class="media-body pl-3">
+                                                                    <h4 class="font-size-sm mb-3">
+                                                                        <a
+                                                                            style="cursor: pointer"
+                                                                            class="nav-link font-weight-bold"
+                                                                            *ngIf="item.date != 'Matricula'"
+                                                                        >
+                                                                            Pensión {{ idx }} {{ item.date | date : 'MMMM' }}
+                                                                            {{ item.date | date : 'YYYY' }}
+                                                                        </a>
+                                                                        <a
+                                                                            style="cursor: pointer"
+                                                                            class="nav-link font-weight-bold"
+                                                                            *ngIf="item.date == 'Matricula'"
+                                                                        >
+                                                                            {{ item.date }}</a
+                                                                        >
+                                                                    </h4>
+                                                                    <ul class="list-unstyled font-size-xs mt-n2 mb-2" style="margin-left: 1rem">
+                                                                        <ng-container
+                                                                            *ngIf="pensionesestudiante[idexpension].matricula == 0 || item.valor != 0"
+                                                                        >
+                                                                            <li class="mb-0" *ngIf="item.date == 'Matricula'">
+                                                                                <span class="text-muted"
+                                                                                    >Valor a pagar:
+                                                                                    {{ config.matricula - item.valor | currency : 'USD' }}</span
+                                                                                >
+                                                                            </li>
+                                                                        </ng-container>
+                                                                        <ng-container
+                                                                            *ngIf="pensionesestudiante[idexpension].matricula == 1 && item.valor == 0"
+                                                                        >
+                                                                            <li class="mb-0" *ngIf="item.date == 'Matricula'">
+                                                                                <span class="text-muted">Cubierto por Beca</span>
+                                                                            </li>
+                                                                        </ng-container>
+                                                                        <ng-container *ngIf="item.date != 'Matricula'">
+                                                                            <li class="mb-0">
+                                                                                <span class="text-muted"
+                                                                                    >Valor a pagar: {{ item.porpagar | currency : 'USD' }}</span
+                                                                                >
+                                                                            </li>
+                                                                        </ng-container>
+                                                                    </ul>
+                                                                    <span
+                                                                        *ngIf="item.estado == 'Pago atrasado Abono'"
+                                                                        class="badge badge-warning"
+                                                                        style="background-color: #f1ee51; margin-left: 1rem"
+                                                                        >{{ item.estado }}</span
+                                                                    >
+                                                                    <span
+                                                                        *ngIf="item.estado == 'Pago anticipado Abono'"
+                                                                        class="badge badge-warning"
+                                                                        style="background-color: #469df4; margin-left: 1rem"
+                                                                        >{{ item.estado }}</span
+                                                                    >
+                                                                    <span
+                                                                        *ngIf="item.estado == 'Pago a tiempo Abono'"
+                                                                        class="badge badge-warning"
+                                                                        style="background-color: #67fa49; margin-left: 1rem"
+                                                                        >{{ item.estado }}</span
+                                                                    >
+                                                                    <span
+                                                                        *ngIf="item.beca == 1 && item.pago.length > 0"
+                                                                        class="badge badge-warning"
+                                                                        style="background-color: #ff8b32; margin-left: 1rem"
+                                                                        >(Beca usado)</span
+                                                                    >
+                                                                    <span
+                                                                        *ngIf="item.beca == 1 && item.pago.length == 0"
+                                                                        class="badge badge-warning"
+                                                                        style="background-color: #e05cfd; margin-left: 1rem"
+                                                                        >(Beca)</span
+                                                                    >
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td
+                                                            class="border-top-1"
+                                                            *ngIf="item.estado == 'Sin Pago'"
+                                                            style="background-color: #fa84759a; margin-left: 1rem"
+                                                        >
+                                                            <div class="media pl-2 py-2">
+                                                                <div class="media-body pl-3">
+                                                                    <h4 class="font-size-sm mb-3">
+                                                                        <a
+                                                                            style="cursor: pointer"
+                                                                            class="nav-link font-weight-bold"
+                                                                            *ngIf="item.date != 'Matricula'"
+                                                                        >
+                                                                            Pensión {{ idx }} {{ item.date | date : 'MMMM' }}
+                                                                            {{ item.date | date : 'YYYY' }}
+                                                                        </a>
+                                                                        <a
+                                                                            style="cursor: pointer"
+                                                                            class="nav-link font-weight-bold"
+                                                                            *ngIf="item.date == 'Matricula'"
+                                                                        >
+                                                                            {{ item.date }}</a
+                                                                        >
+                                                                    </h4>
+                                                                    <ul class="list-unstyled font-size-xs mt-n2 mb-2" style="margin-left: 1rem">
+                                                                        <ng-container
+                                                                            *ngIf="pensionesestudiante[idexpension].matricula == 0 || item.valor != 0"
+                                                                        >
+                                                                            <li class="mb-0" *ngIf="item.date == 'Matricula'">
+                                                                                <span class="text-muted"
+                                                                                    >Valor a pagar:
+                                                                                    {{ config.matricula - item.valor | currency : 'USD' }}</span
+                                                                                >
+                                                                            </li>
+                                                                        </ng-container>
+                                                                        <ng-container
+                                                                            *ngIf="pensionesestudiante[idexpension].matricula == 1 && item.valor == 0"
+                                                                        >
+                                                                            <li class="mb-0" *ngIf="item.date == 'Matricula'">
+                                                                                <span class="text-muted">Cubierto por Beca</span>
+                                                                            </li>
+                                                                        </ng-container>
+                                                                        <ng-container *ngIf="item.date != 'Matricula'">
+                                                                            <li class="mb-0">
+                                                                                <span class="text-muted"
+                                                                                    >Valor a pagar: {{ item.porpagar | currency : 'USD' }}</span
+                                                                                >
+                                                                            </li>
+                                                                        </ng-container>
+                                                                    </ul>
+                                                                    <span
+                                                                        *ngIf="item.estado == 'Pago atrasado Abono'"
+                                                                        class="badge badge-warning"
+                                                                        style="background-color: #f1ee51; margin-left: 1rem"
+                                                                        >{{ item.estado }}</span
+                                                                    >
+                                                                    <span
+                                                                        *ngIf="item.estado == 'Pago anticipado Abono'"
+                                                                        class="badge badge-warning"
+                                                                        style="background-color: #469df4; margin-left: 1rem"
+                                                                        >{{ item.estado }}</span
+                                                                    >
+                                                                    <span
+                                                                        *ngIf="item.estado == 'Pago a tiempo Abono'"
+                                                                        class="badge badge-warning"
+                                                                        style="background-color: #67fa49; margin-left: 1rem"
+                                                                        >{{ item.estado }}</span
+                                                                    >
+                                                                    <span
+                                                                        *ngIf="item.beca == 1 && item.pago.length > 0"
+                                                                        class="badge badge-warning"
+                                                                        style="background-color: #ff8b32; margin-left: 1rem"
+                                                                        >(Beca usado)</span
+                                                                    >
+                                                                    <span
+                                                                        *ngIf="item.beca == 1 && item.pago.length == 0"
+                                                                        class="badge badge-warning"
+                                                                        style="background-color: #e05cfd; margin-left: 1rem"
+                                                                        >(Beca)</span
+                                                                    >
+                                                                </div>
+                                                            </div>
+                                                        </td>
+        
+                                                        <td class="border-top-0">
+                                                            <div class="py-2">
+                                                                <div class="font-size-xs text-muted mb-1">Factura:</div>
+                                                                <ng-container *ngIf="item.pago != undefined">
+                                                                    <ng-container *ngFor="let fact of item.pago">
+                                                                        <h4 class="font-size-sm mb-3">
+                                                                            <a
+                                                                                style="cursor: pointer"
+                                                                                class="nav-link font-weight-bold"
+                                                                                [routerLink]="['/pagos/', fact]"
+                                                                            >
+                                                                                {{ fact }}</a
+                                                                            >
+                                                                        </h4>
+                                                                    </ng-container>
+                                                                </ng-container>
+                                                            </div>
+                                                        </td>
+        
+                                                        <td class="border-top-0">
+                                                            <div class="py-2 pr-3 text-right">
+                                                                <div class="font-size-xs text-muted mb-1">
+                                                                    Valor: {{ item.valor | currency : 'USD' }}
+                                                                </div>
+                                                                <div class="font-size-sm font-weight-bold text-dark">
+                                                                    <span></span>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+        
+                                                    <tr>
+                                                        <td style="padding-left: 1.3rem !important" colspan="2">
+                                                            <b>Total por pagar</b>
+                                                        </td>
+                                                        <td class="" colspan="1">
+                                                            <div class="py-2 pr-3 text-right">
+                                                                <span>{{ total_pagar | currency : 'USD' }}</span>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                                <tbody *ngIf="load_pension == false">
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-12 text-center">
+                                                                <div class="spinner-border" style="width: 3rem; height: 3rem" role="status">
+                                                                    <span class="visually-hidden"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+        
+                            <ng-container *ngIf="estudiante == undefined">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="row justify-content-center">
+                                            <div class="col-12 col-md-5 col-xl-4 my-5">
+                                                <div class="text-center">
+                                                    <!-- Preheading -->
+                                                    <h6 class="text-uppercase text-muted mb-4">404 error</h6>
+        
+                                                    <!-- Heading -->
+                                                    <h1 class="display-4 mb-3">There’s no page here 😭</h1>
+        
+                                                    <!-- Subheading -->
+                                                    <p class="text-muted mb-4">Looks like you ended up here by accident?</p>
+        
+                                                    <!-- Button -->
+                                                    <a [routerLink]="['/pagos']" class="btn btn-lg btn-primary"> Regresar a pagos </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </ng-container>
+                        <ng-container *ngIf="load_data">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-12 text-center">
+                                            <div class="spinner-border text-primary" role="status">
+                                                <span class="visually-hidden"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+                <!-- / .row -->
+            </div>
+        </div>
+    </div>
+</div>
