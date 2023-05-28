@@ -17,9 +17,31 @@ export class ControlAdminsComponent implements OnInit {
   ngOnInit(): void {
     this.filtro='';
 		this._adminService.listar_registro(localStorage.getItem('token')).subscribe((response) => {
-			console.log(response.data);
-			this.resgistro_arr = response.data;
-			this.resgistro_const = response.data;
+			this.resgistro_arr=response.data.map((item:any)=>{
+				if(item.admin){
+					return{
+						admin:{
+							apellidos: item.admin.apellidos,
+							nombres: item.admin.nombres,
+							email: item.admin.email,
+						},
+						createdAt:item.createdAt,
+						descripcion:item.descripcion,
+						tipo:item.tipo,
+					  _id:item._id,
+					}
+				}else{
+					return{
+						createdAt:item.createdAt,
+						descripcion:item.descripcion,
+						tipo:item.tipo,
+					  _id:item._id,
+					}
+				}
+				
+			  });
+
+			this.resgistro_const = this.resgistro_arr;
 		});
 	}
   filtrar_documento() {

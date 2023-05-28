@@ -7,28 +7,7 @@ import * as XLSX from 'xlsx';
 import * as pako from 'pako';
 import { saveAs } from 'file-saver';
 declare var $: any;
-interface Retirado {
-	matricula: number;
-	paga_mat: number;
-	meses: number;
-	condicion_beca: string;
-	_id: string;
-	idestudiante: {
-	  estado: string;
-	  _id: string;
-	  nombres: string;
-	  apellidos: string;
-	  anio_desac: string;
-	  f_desac: string;
-	};
-	val_beca:any,
-	desc_beca:any,
-	num_mes_res:any,
-	num_mes_beca:any,
-	anio_lectivo: string;
-	curso: string;
-	paralelo: string;
-  }
+
 @Component({
   selector: 'app-stundes-payments',
   templateUrl: './stundes-payments.component.html',
@@ -75,12 +54,16 @@ export class StundesPaymentsComponent implements OnInit {
   public page = 1;
 	public pageSize = 10;
   public pageSize2 = 10;
+
   constructor(private _adminService: AdminService, private _configService:ConfigService) {}
 
   private config_sistem=this._configService.getConfig()as { imagen: string, identity: string, token: string , rol:string};
+  public load_data=true;
 
   ngOnInit(): void {
-   
+    this.load_data=true;
+    this._configService.setProgress(this._configService.getProgress()+5);
+
     this._adminService.obtener_config_admin(localStorage.getItem('token')).subscribe((responese) => {
       this.config = responese.data.map((item:any)=>{
         return{
@@ -108,10 +91,16 @@ export class StundesPaymentsComponent implements OnInit {
         ).getFullYear()
       });
       this.active = -1;
+      setTimeout(() => {
+        $('#Cargando').modal('show');
+      }, 1000);
       this.detalle_data(0);
     });
+
 }
 actualizar_estudiante(){
+  this.load_data=true;
+  this._configService.setProgress(5);
   this.actualizar_dashest=true;
   this.active=-1;
   console.log("Actualizar");
@@ -119,9 +108,9 @@ actualizar_estudiante(){
 }
 public horaact:any;
 detalle_data(val: any) {
+  console.log(this.active,val);
   if (this.active != val) {
     this.active = val;
-
     this.nmt = 0;
     this.nmt = this.config[val].numpension
     this.pdffecha = (
@@ -135,10 +124,7 @@ detalle_data(val: any) {
         )
       ).getFullYear()
     ).toString();
-    
     this.fbeca = this.config[val].anio_lectivo;
-
-    
     this.pagado = 0;
     this.porpagar = 0;
     this.pagospension = [];
@@ -161,7 +147,7 @@ detalle_data(val: any) {
       let sigu=true;
       //console.log(localStorage.getItem('dia'));
       if(localStorage.getItem('dia')){
-
+        this._configService.setProgress(this._configService.getProgress()+10);
         this.horaact=new Date(JSON.parse(localStorage.getItem('dia')||''));
 
         if((new Date().getTime()-new Date(this.horaact).getTime())<3600000&&
@@ -202,6 +188,9 @@ detalle_data(val: any) {
           this.pagospension = JSON.parse( pako.inflate(new Uint8Array(atob(localStorage.getItem('pagospension')||'').split('').map(char => char.charCodeAt(0))), { to: 'string' }) );
           //console.log(this.pagospension);
           sigu=false;
+
+          this._configService.setProgress(this._configService.getProgress()+10);
+
           this.cargar_canvas3(costosextrapagos)
         }
       }
@@ -226,12 +215,8 @@ detalle_data(val: any) {
   
             this.cargar_canvas3(costosextrapagos)
           }else{
-            this.actualizar_dashest=true
-            
+            this.actualizar_dashest=true;            
             this.armado_matriz(val,costosextrapagos,costopension,costomatricula);
-            
-
-        
           }
           
         });
@@ -241,11 +226,6 @@ detalle_data(val: any) {
       this.actualizar_dashest=true;
       this.armado_matriz(val,costosextrapagos,costopension,costomatricula);
     }
-    
-
-    
-    
-
   }
 }
 ismeses(numes:any){
@@ -291,7 +271,7 @@ armado_matriz(val:any,costosextrapagos:any,costopension:any,costomatricula:any){
           valor: item.valor
         }
       });
-        
+      this._configService.setProgress(this._configService.getProgress()+5);
         //this.nmt=10;
         this._adminService.obtener_becas_conf(this.config[val]._id, localStorage.getItem('token'))
         .subscribe((response) => {
@@ -305,8 +285,9 @@ armado_matriz(val:any,costosextrapagos:any,costopension:any,costomatricula:any){
               }
             }
           });
+          this._configService.setProgress(this._configService.getProgress()+5);
           this._adminService.listar_pensiones_estudiantes_tienda(localStorage.getItem('token'),this.config[val].anio_lectivo).subscribe((response) => {
-
+            console.log(response.data);
             this.penest = response.data.map((item:any)=>{
               return{
                 curso:item.curso,
@@ -333,6 +314,9 @@ armado_matriz(val:any,costosextrapagos:any,costopension:any,costomatricula:any){
                 num_mes_res:item.num_mes_res,
               }
             });
+
+            this._configService.setProgress(this._configService.getProgress()+5);
+
             if (this.penest != undefined) {
               //Armado de matriz
               this.penest.forEach((element: any) => {
@@ -359,10 +343,14 @@ armado_matriz(val:any,costosextrapagos:any,costopension:any,costomatricula:any){
                 
               });
               //Conteo de Estudiantes
+
+              this._configService.setProgress(this._configService.getProgress()+5);
+
               this.detalles = this.estudiantes;
               this.pagos_estudiante= [];
-              this.penest.forEach((elementpent: any) => {							
-                if (elementpent.idestudiante.estado != 'Desactivado') {
+              this.penest.forEach((elementpent: any) => {			
+
+                if (elementpent.idestudiante.estado != 'Desactivado'|| elementpent.idestudiante.f_desac==undefined) {
                   var f = elementpent.anio_lectivo;
                     let auxpagos = this.pagospension.find((elementpp:any)=>elementpp.curso==elementpent.curso && elementpp.paralelo == elementpent.paralelo);
                     if(auxpagos!=undefined){
@@ -493,14 +481,17 @@ armado_matriz(val:any,costosextrapagos:any,costopension:any,costomatricula:any){
                           [elementpent.paralelo]: [result]
                         };
                       }
-
+                      this._configService.setProgress(this._configService.getProgress()+15);
                       //this.pagos_estudiante.push(result);
                       
                     }
                     
                   
+                }else{
+                  console.log(elementpent);
                 }
               });
+              this._configService.setProgress(this._configService.getProgress()+5);
               this.cursos = this.cursos.sort(function (a: any, b: any) {
                 if (parseInt(a) > parseInt(b)) {
                   return 1;
@@ -515,7 +506,7 @@ armado_matriz(val:any,costosextrapagos:any,costopension:any,costomatricula:any){
               this.cursos.forEach((element:any) => {
                 this.cursos2.push(element);
               });
-              
+              this._configService.setProgress(this._configService.getProgress()+5);
               var datos1: any = [];
               var datos2: any = [];
               var datos3: any = [];
@@ -531,7 +522,7 @@ armado_matriz(val:any,costosextrapagos:any,costopension:any,costomatricula:any){
                 borderColor: 'rgba(0,214,217,1)',
                 borderWidth: 2,
               });
-
+              this._configService.setProgress(this._configService.getProgress()+5);
               this.deteconomico.push({
                 label: 'Valor Recaudado',
                 data: datos2,
@@ -546,6 +537,7 @@ armado_matriz(val:any,costosextrapagos:any,costopension:any,costomatricula:any){
                 borderColor: 'rgba(218,0,16,1)',
                 borderWidth: 2,
               });
+              this._configService.setProgress(this._configService.getProgress()+10);
               this.pagospension.forEach((elementp: any) => {
                 for (var i = 0; i < this.cursos.length; i++) {
                  // var aux = elementp.label.substring(0, elementp.label.length - 1);
@@ -568,7 +560,6 @@ armado_matriz(val:any,costosextrapagos:any,costopension:any,costomatricula:any){
                 }
               });
             } 
-
             this.cargar_canvas3(costosextrapagos);
 
           });
@@ -583,15 +574,8 @@ armado_matriz(val:any,costosextrapagos:any,costopension:any,costomatricula:any){
 
 cargar_canvas3(costosextrapagos:any){
 
-  this._configService.setLabels(this.cursos);
-    this._configService.setData(this.deteconomico);
-
-
-  
-    //this.myChart3.update();
   
 
-  
   if(this.actualizar_dashest==true){
     this.pagospension = this.pagospension.sort(function (a: any, b: any) {
       if (a.curso > b.curso) {
@@ -609,14 +593,9 @@ cargar_canvas3(costosextrapagos:any){
       }
     });
   }
-  
 
-  /*
-  this.deteconomico.forEach((element: any) => {
-    this.myChart3.data.datasets.push(element);
-  });*/
-  
-  //this.pagospension = this.pagospension;
+  this._configService.setProgress(this._configService.getProgress()+20);
+
   this.armado(10, this.active,costosextrapagos);
   
   
@@ -632,6 +611,7 @@ armado(tiempo: any, idxconfi: any,costosextrapagos:any) {
     this.detalles = this.estudiantes;
     this.auxbecares = 0;
     this.total_pagar = 0;
+    this._configService.setProgress(this._configService.getProgress()+10);
     this.pagos_estudiante.forEach((element:any) => {
       for (const key in element) {
         if (Object.prototype.hasOwnProperty.call(element, key)) {
@@ -643,7 +623,7 @@ armado(tiempo: any, idxconfi: any,costosextrapagos:any) {
       }
         
       });
-      console.log(this.pagos_estudiante);
+    this._configService.setProgress(this._configService.getProgress()+20);
     this.retirados();
     
       if(this.actualizar_dashest==true){
@@ -662,11 +642,12 @@ generarMeses() {
     const mes = new Date( new Date().setMonth(anioActual+i)).getMonth();
     this.arr_meses.push({ numero: i+1, nombre: this.meses[mes] });
   }
+  this._configService.setProgress(this._configService.getProgress()+5);
   //return meses;
   }
   
 
-public retirados_arr:Retirado[]= [] ;
+public retirados_arr:any[]= [] ;
 ordenarPor(columna: string): void {
   //this.load_data_est = true;
   if(columna=='curso'){
@@ -711,15 +692,41 @@ ordenarPor(columna: string): void {
   }
 
 retirados(){
-  this.retirados_arr=[]as any;
-  this.penest.forEach((element:any) => {
-    if(new Date(element.anio_lectivo).getTime() == new Date(this.fbeca).getTime()
-     &&	element.idestudiante.estado == 'Desactivado' &&	new Date(element.anio_lectivo).getTime()
-      ==new Date(element.idestudiante.anio_desac).getTime()
-    ){
-      this.retirados_arr.push(element);
-    }
-  });
+    this.retirados_arr=[];
+    this.penest.forEach((element:any) => {
+      if(new Date(element.anio_lectivo).getTime() == new Date(this.fbeca).getTime()
+       &&	element.idestudiante.estado == 'Desactivado' &&	new Date(element.anio_lectivo).getTime()
+        ==new Date(element.idestudiante.anio_desac).getTime()
+      ){
+        this.retirados_arr.push(element);
+      }
+    });  
+    this.estudiantes.forEach((element:any) => {
+      this.retirados_arr.find((element2:any)=>{
+
+        if (element2._id === element.idpension._id) {
+          let existePago=false;
+          if (!element2.pagos) {
+            element2.pagos = [];
+          }else{
+            existePago = element2.pagos.find((pago: any) => pago.valor === element.valor && pago.tipo === element.tipo && pago._id === element.pago._id);
+          }
+          if (!existePago) {
+            element2.pagos.push({ valor: element.valor, tipo: element.tipo, _id: element.pago._id });
+          }
+        }
+
+      });   
+    });
+    this._configService.setProgress(this._configService.getProgress()+5);
+  
+  this.load_data=false;
+  this._configService.setProgress(100);
+  setTimeout(() => {
+    this._configService.setProgress(0);
+    this._configService.setLabels(this.cursos);
+    this._configService.setData(this.deteconomico);
+  }, 1500);
   //console.log(this.retirados_arr);
 }
 
@@ -755,6 +762,7 @@ exportarcash(){
   }
   public auxdasboarestudiante: any = {};
 guardardashboard_estudiante(){
+  this._configService.setProgress(10);
   if(this.active==0){
     /*if (navigator.storage && navigator.storage.estimate) {
       navigator.storage.estimate().then((estimate) => {
@@ -783,32 +791,32 @@ guardardashboard_estudiante(){
     let fileContent =JSON.stringify(this.auxdasboarestudiante);
     // Convertir objeto a string JSON
     
-    
+    this._configService.setProgress(this._configService.getProgress()+10);
 
     localStorage.setItem('dia',JSON.stringify(this.auxdasboarestudiante.dia));
-
+    this._configService.setProgress(this._configService.getProgress()+5);
     localStorage.setItem('pagos_estudiante',btoa(String.fromCharCode.apply(null,Array.from(pako.deflate(JSON.stringify(this.auxdasboarestudiante.pagos_estudiante))))));
-
+    this._configService.setProgress(this._configService.getProgress()+5);
     localStorage.setItem('estudiantes',btoa(String.fromCharCode.apply(null, Array.from(pako.deflate(JSON.stringify(this.auxdasboarestudiante.estudiantes))))) );
-
+    this._configService.setProgress(this._configService.getProgress()+5);
     localStorage.setItem('arr_becas',btoa(String.fromCharCode.apply(null, Array.from(pako.deflate(JSON.stringify(this.auxdasboarestudiante.arr_becas))))) );
-
+    this._configService.setProgress(this._configService.getProgress()+5);
     localStorage.setItem('penest',btoa(String.fromCharCode.apply(null, Array.from(pako.deflate(JSON.stringify(this.auxdasboarestudiante.penest))))) );
-
+    this._configService.setProgress(this._configService.getProgress()+5);
     localStorage.setItem('cursos',btoa(String.fromCharCode.apply(null, Array.from(pako.deflate(JSON.stringify(this.auxdasboarestudiante.cursos))))) );
-
+    this._configService.setProgress(this._configService.getProgress()+5);
     localStorage.setItem('pagospension', btoa(String.fromCharCode.apply(null, Array.from(pako.deflate(JSON.stringify(this.auxdasboarestudiante.pagospension))))));
-
+    this._configService.setProgress(this._configService.getProgress()+5);
     localStorage.setItem('porpagar',btoa(String.fromCharCode.apply(null, Array.from(pako.deflate(JSON.stringify(this.auxdasboarestudiante.porpagar))))));
-    
+    this._configService.setProgress(this._configService.getProgress()+5);
     localStorage.setItem('pagado', btoa(String.fromCharCode.apply(null, Array.from(pako.deflate(JSON.stringify(this.auxdasboarestudiante.pagado))))));
-
+    this._configService.setProgress(this._configService.getProgress()+5);
     localStorage.setItem('cursos2',btoa(String.fromCharCode.apply(null, Array.from(pako.deflate(JSON.stringify(this.auxdasboarestudiante.cursos2))))) );
-
+    this._configService.setProgress(this._configService.getProgress()+5);
     localStorage.setItem('deteconomico',btoa(String.fromCharCode.apply(null, Array.from(pako.deflate(JSON.stringify(this.auxdasboarestudiante.deteconomico))))) );
-
+    this._configService.setProgress(this._configService.getProgress()+5);
     localStorage.setItem('pagospension',btoa(String.fromCharCode.apply(null, Array.from(pako.deflate(JSON.stringify(this.auxdasboarestudiante.pagospension))))) );
-    
+    this._configService.setProgress(this._configService.getProgress()+5);
     
     this._adminService.actualizzas_dash(localStorage.getItem('token'),this.auxdasboarestudiante).subscribe(response=>{
       
@@ -817,6 +825,10 @@ guardardashboard_estudiante(){
         this.horaact=new Date();
       }
     });
+    this._configService.setProgress(100);
+    setTimeout(() => {
+      this._configService.setProgress(0);
+    }, 1500);
   }
   
 }
@@ -1097,12 +1109,26 @@ exportTable(val: any,genero?:any) {
   }
 }
 getCount(name:any,name2?:any) {
+  try {
   var aux=Object.assign(this.pagos_estudiante[name][name2]);
-  return aux.filter((o:any) => o.detalle[1].porpagar==0).length;
+
+    return aux.filter((o:any) => o.detalle[1].porpagar==0).length;
+  } catch (error) {
+    console.log(this.pagos_estudiante);
+    console.log(name,name2);
+    console.log(error);
+  }
+  
   }
   getCountno(name:any,name2?:any) {
-  var aux=Object.assign(this.pagos_estudiante[name][name2]);
-  return aux.filter((o:any) => o.detalle[1].porpagar!=0).length;
+    try {
+      var aux=Object.assign(this.pagos_estudiante[name][name2]);
+      return aux.filter((o:any) => o.detalle[1].porpagar!=0).length;
+    } catch (error) {
+      console.log(name,name2);
+      console.log(error);
+    }
+
   }
   getCountTotal(name:any) {
     var suma=0;

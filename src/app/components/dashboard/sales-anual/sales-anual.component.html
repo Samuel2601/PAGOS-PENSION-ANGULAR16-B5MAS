@@ -34,7 +34,7 @@
                   <h3 class="text-uppercase text-muted mb-2">
                     PAGOS DE {{ meses[auxfactual] }}:
 
-                    <span class="h3 mb-0" style="color: black">
+                    <span class="h3 mb-0" >
                       {{
                         pagos[0].data[meses[auxfactual]]
                           | number : "1.2"
@@ -59,7 +59,7 @@
                   <!-- Title -->
                   <h6 class="text-uppercase text-muted mb-1">
                     PAGOS ANUALES {{ faux | date : "YYYY" }}:
-                    <span class="h3 mb-0" style="color: black">
+                    <span class="h3 mb-0" >
                       <br />
                       {{ totalfaux | number : "1.2" }}
                     </span>
@@ -72,7 +72,7 @@
                   <!-- Title -->
                   <h6 class="text-uppercase text-muted mb-1">
                     PAGOS ANUALES {{ factual | date : "YYYY" }}:
-                    <span class="h3 mb-0" style="color: black">
+                    <span class="h3 mb-0" >
                       <br />{{ totalfactual | number : "1.2" }}
                     </span>
                   </h6>
@@ -145,7 +145,7 @@
     </ng-container>
 
 
-  <ng-container >
+  <ng-container *ngIf="ventas.length == 0 ">
     <div class="card-body" style="cursor: progress">
       <div class="row">
         <div class="col-12 text-center">
