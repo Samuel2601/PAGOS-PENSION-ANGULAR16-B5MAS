@@ -18,7 +18,7 @@ export class MenuDashboardComponent implements OnInit{
   public rol:any;
   ngOnInit(): void {
     this.rol=this.config.rol;
-    //this.estadoestudiante();
+    this.estadoestudiante();
 	}
   
   estadoestudiante(){

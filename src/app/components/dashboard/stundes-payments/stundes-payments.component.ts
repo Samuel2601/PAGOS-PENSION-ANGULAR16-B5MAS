@@ -163,7 +163,7 @@ detalle_data(val: any) {
       if(localStorage.getItem('dia')){
 
         this.horaact=new Date(JSON.parse(localStorage.getItem('dia')||''));
-        //console.log(this.horaact);
+
         if((new Date().getTime()-new Date(this.horaact).getTime())<3600000&&
           localStorage.getItem('pagos_estudiante')&&
           localStorage.getItem('estudiantes')&&
@@ -291,7 +291,6 @@ armado_matriz(val:any,costosextrapagos:any,costopension:any,costomatricula:any){
           valor: item.valor
         }
       });
-      //console.log(this.estudiantes[1]);
         
         //this.nmt=10;
         this._adminService.obtener_becas_conf(this.config[val]._id, localStorage.getItem('token'))
@@ -307,7 +306,7 @@ armado_matriz(val:any,costosextrapagos:any,costopension:any,costomatricula:any){
             }
           });
           this._adminService.listar_pensiones_estudiantes_tienda(localStorage.getItem('token'),this.config[val].anio_lectivo).subscribe((response) => {
-            //console.log(response.data[109],response.data[1]);
+
             this.penest = response.data.map((item:any)=>{
               return{
                 curso:item.curso,
@@ -339,7 +338,7 @@ armado_matriz(val:any,costosextrapagos:any,costopension:any,costomatricula:any){
               this.penest.forEach((element: any) => {
                   var con = -1;
                   for (var i = 0; i < this.pagospension.length; i++) {
-                    if (this.pagospension[i].label == element.curso + element.paralelo) {
+                    if (this.pagospension[i].curso + this.pagospension[i].paralelo == element.curso + element.paralelo) {
                       con = i;
                     }
                   }
@@ -349,7 +348,8 @@ armado_matriz(val:any,costosextrapagos:any,costopension:any,costomatricula:any){
                     }
 
                     this.pagospension.push({
-                      label: element.curso + element.paralelo,
+                      curso: element.curso, 
+                      paralelo: element.paralelo,
                       num: 0,
                       data: [0, 0],
                       genero: [0, 0,0],
@@ -361,11 +361,10 @@ armado_matriz(val:any,costosextrapagos:any,costopension:any,costomatricula:any){
               //Conteo de Estudiantes
               this.detalles = this.estudiantes;
               this.pagos_estudiante= [];
-              
               this.penest.forEach((elementpent: any) => {							
                 if (elementpent.idestudiante.estado != 'Desactivado') {
                   var f = elementpent.anio_lectivo;
-                    let auxpagos = this.pagospension.find((elementpp:any)=>elementpp.label==elementpent.curso + elementpent.paralelo);
+                    let auxpagos = this.pagospension.find((elementpp:any)=>elementpp.curso==elementpent.curso && elementpp.paralelo == elementpent.paralelo);
                     if(auxpagos!=undefined){
                       
                       if(elementpent.idestudiante.genero=="Masculino"){
@@ -472,14 +471,30 @@ armado_matriz(val:any,costosextrapagos:any,costopension:any,costomatricula:any){
                         }
                         
                       }
-                      this.pagos_estudiante.push({
+                      var result={
                         nombres: (elementpent.idestudiante.apellidos + ' ' + elementpent.idestudiante.nombres).toString(),
                         curso: elementpent.curso,
                         paralelo: elementpent.paralelo,
                         detalle: this.pagopension,
                         estado: elementpent.idestudiante.estado,
                         dni:elementpent.idestudiante.dni
-                      });
+                      }
+                      // Verificar si el curso+paralelo ya existe en el objeto de agrupación
+                      if (this.pagos_estudiante[elementpent.curso]) {
+                        if (this.pagos_estudiante[elementpent.curso][elementpent.paralelo]) {
+                          this.pagos_estudiante[elementpent.curso][elementpent.paralelo].push(result);
+                        } else {
+                          // Si no existe, crear un nuevo array con el primer pago
+                          this.pagos_estudiante[elementpent.curso][elementpent.paralelo] = [result];
+                        }
+                      } else {
+                        // Si no existe, crear un nuevo objeto y un nuevo array con el primer pago
+                        this.pagos_estudiante[elementpent.curso] = {
+                          [elementpent.paralelo]: [result]
+                        };
+                      }
+
+                      //this.pagos_estudiante.push(result);
                       
                     }
                     
@@ -531,11 +546,10 @@ armado_matriz(val:any,costosextrapagos:any,costopension:any,costomatricula:any){
                 borderColor: 'rgba(218,0,16,1)',
                 borderWidth: 2,
               });
-
               this.pagospension.forEach((elementp: any) => {
                 for (var i = 0; i < this.cursos.length; i++) {
-                  var aux = elementp.label.substring(0, elementp.label.length - 1);
-                  if (aux == this.cursos[i]) {
+                 // var aux = elementp.label.substring(0, elementp.label.length - 1);
+                  if (elementp.curso== this.cursos[i]) {
                     
                     this.deteconomico.forEach((elementde: any) => {
                       if (elementde.label == 'N° de Estudiantes') {
@@ -566,6 +580,7 @@ armado_matriz(val:any,costosextrapagos:any,costopension:any,costomatricula:any){
   }
   
 }
+
 cargar_canvas3(costosextrapagos:any){
 
   this._configService.setLabels(this.cursos);
@@ -579,14 +594,19 @@ cargar_canvas3(costosextrapagos:any){
   
   if(this.actualizar_dashest==true){
     this.pagospension = this.pagospension.sort(function (a: any, b: any) {
-      if (a.label > b.label) {
+      if (a.curso > b.curso) {
         return 1;
-      }
-      if (a.label < b.label) {
+      } else if (a.curso < b.curso) {
         return -1;
+      } else {
+        if (a.paralelo < b.paralelo) {
+          return -1; // a debe aparecer antes que b
+        } else if (a.paralelo > b.paralelo) {
+          return 1; // b debe aparecer antes que a
+        } else {
+          return 0; // a y b son iguales
+        }
       }
-      // a must be equal to b
-      return 0;
     });
   }
   
@@ -612,69 +632,28 @@ armado(tiempo: any, idxconfi: any,costosextrapagos:any) {
     this.detalles = this.estudiantes;
     this.auxbecares = 0;
     this.total_pagar = 0;
-
-    this.pagos_estudiante = this.pagos_estudiante.sort(function (a, b) {
-      if (parseInt(a.curso)< parseInt(b.curso) ) {
-        return -1; // a debe aparecer antes que b
-        } else if (parseInt(a.curso)> parseInt(b.curso) ) {
-        return 1; // b debe aparecer antes que a
-        } else {
-        if (a.paralelo < b.paralelo) {
-          return -1; // a debe aparecer antes que b
-        } else if (a.paralelo > b.paralelo) {
-          return 1; // b debe aparecer antes que a
-        } else {						
-          return a.nombres.localeCompare(b.nombres, 'es', { sensitivity: 'base' });
-         // return 0; // a y b son iguales
-        }
-        }
-    });
-
-  if(this.actualizar_dashest==true){
-
-    
-    let contador=1,paralelo='';
-
     this.pagos_estudiante.forEach((element:any) => {
-      if(paralelo==''){
-        paralelo=element.curso+element.paralelo;
-        element.indice=contador;
-        contador++;
-      }else if(element.curso+element.paralelo==paralelo){
-        element.indice=contador;
-        contador++;
-      }else{
-        paralelo=element.curso+element.paralelo;
-        contador=1;
-        element.indice=contador;
-        contador++;
+      for (const key in element) {
+        if (Object.prototype.hasOwnProperty.call(element, key)) {
+          //const element2 = element[key];
+          element[key]=element[key].sort(function (a:any, b:any) {
+            return a.nombres.localeCompare(b.nombres, 'es', { sensitivity: 'base' });
+          });
+        }
       }
-      
-    });
-    let pagos_cursos:any[]=[];
-    this.pagos_estudiante.forEach(pago => {
-      const cursoParalelo = pago.curso+pago.paralelo;
+        
+      });
+      console.log(this.pagos_estudiante);
+    this.retirados();
     
-      // Verificar si el curso+paralelo ya existe en el objeto de agrupación
-      if (pagos_cursos[cursoParalelo]) {
-        // Si existe, agregar el pago al array correspondiente
-        pagos_cursos[cursoParalelo].push(pago);
-      } else {
-        // Si no existe, crear un nuevo array con el primer pago
-        pagos_cursos[cursoParalelo] = [pago];
+      if(this.actualizar_dashest==true){
+        this.guardardashboard_estudiante();
       }
-    });
-    console.log(pagos_cursos);
     
-    
-    this.guardardashboard_estudiante();
-  }
-  this.retirados();
-  //console.log(this.pagos_estudiante);
-  
-
 }
+
 public arr_meses:any=[];
+
 generarMeses() {
   this.arr_meses=[];
   //const meses = [];
@@ -749,11 +728,19 @@ exportarcash(){
   var j=1;
   //console.log(this.pagos_estudiante);
   this.pagos_estudiante.forEach((element:any) => {
-    if(this.sumarcash(element.detalle)>0 &&element.estado!='Desactivado'){
-      var auxsuma=this.sumarcash(element.detalle)
-      auxsuma= parseFloat((auxsuma).toFixed(2))*100
-      json.push({'Item':j,'Ref':'CO','Cedula':element.dni,'Modena':'USD','Valor':auxsuma,'Ref1':'REC','Ref2':'','Ref3':'','Concepto':'PENSION DE '+ (this.meses[ new Date(new Date(this.fbeca).setMonth( new Date(this.fbeca).getMonth()+this.mcash-1)).getMonth()]).toUpperCase(),'Ref4':'C','Cedula2':element.dni,'Alumno':element.nombres});
-      j++;
+    for (const key in element) {
+      if (Object.prototype.hasOwnProperty.call(element, key)) {
+        const element3 = element[key];
+        element3.forEach((element2:any) => {
+          if(this.sumarcash(element2.detalle)>0 &&element2.estado!='Desactivado'){
+            var auxsuma=this.sumarcash(element2.detalle)
+            auxsuma= parseFloat((auxsuma).toFixed(2))*100
+            json.push({'Item':j,'Ref':'CO','Cedula':element2.dni,'Modena':'USD','Valor':auxsuma,'Ref1':'REC','Ref2':'','Ref3':'','Concepto':'PENSION DE '+ (this.meses[ new Date(new Date(this.fbeca).setMonth( new Date(this.fbeca).getMonth()+this.mcash-1)).getMonth()]).toUpperCase(),'Ref4':'C','Cedula2':element2.dni,'Alumno':element2.nombres});
+            j++;
+          }
+        });
+        
+      }
     }
   });
   
@@ -994,8 +981,8 @@ exportTable(val: any,genero?:any) {
     );
     //$('#btncursos'+val).show();
     this.pagospension.forEach((element: any) => {
-      $('#' + element.label).show();
-      var btn=document.getElementById(element.label);
+      $('#' + element.curso+element.paralelo).show();
+      var btn=document.getElementById(element.curso+element.paralelo);
       if(btn){
         btn.style.display = 'block';
       }
@@ -1078,7 +1065,7 @@ exportTable(val: any,genero?:any) {
         $('#btncursos' + val).hide();
         genero={0:0,1:0,2:0}
         this.pagospension.forEach((element:any) => {
-          if(element.label==val+'A'||element.label==val+'B'||element.label==val+'C'||element.label==val+'D'||element.label==val+'E'||element.label==val+'F'){
+          if(element.curso+element.paralelo==val+'A'||element.curso+element.paralelo==val+'B'||element.curso+element.paralelo==val+'C'||element.curso+element.paralelo==val+'D'||element.curso+element.paralelo==val+'E'||element.curso+element.paralelo==val+'F'){
             genero[0]=genero[0]+element.genero[0];
             genero[1]=genero[1]+element.genero[1];
             genero[2]=genero[2]+element.genero[2];
@@ -1109,23 +1096,40 @@ exportTable(val: any,genero?:any) {
     }
   }
 }
-getCount(name:any) {
-  var aux=Object.assign(this.pagos_estudiante);
-  //console.log(aux[0],name,aux[0].curso+aux[0].paralelo,aux[0].detalle[0], (aux[0].curso+aux[0].paralelo).toString() === name);
-  return aux.filter((o:any) => (o.curso+o.paralelo).toString() === name&&o.detalle[1].porpagar==0).length;
+getCount(name:any,name2?:any) {
+  var aux=Object.assign(this.pagos_estudiante[name][name2]);
+  return aux.filter((o:any) => o.detalle[1].porpagar==0).length;
   }
-  getCountno(name:any) {
-  var aux=Object.assign(this.pagos_estudiante);
-  return aux.filter((o:any) => (o.curso+o.paralelo).toString() === name&&o.detalle[1].porpagar!=0).length;
+  getCountno(name:any,name2?:any) {
+  var aux=Object.assign(this.pagos_estudiante[name][name2]);
+  return aux.filter((o:any) => o.detalle[1].porpagar!=0).length;
   }
   getCountTotal(name:any) {
-  var aux=Object.assign(this.pagos_estudiante);
-  return aux.filter((o:any) => (o.curso).toString() === name&&o.detalle[1].porpagar==0).length;
+    var suma=0;
+
+    for (const key in this.pagos_estudiante[name]) {
+      if (Object.prototype.hasOwnProperty.call(this.pagos_estudiante[name], key)) {
+        const element = this.pagos_estudiante[name][key];
+        suma=suma+element.filter((o:any) => o.detalle[1].porpagar==0).length;
+      }
+    }
+
+
+    return suma;
   }
-  getCountnoTotal(name:any) {
-  
-  var aux=Object.assign(this.pagos_estudiante);
-  return aux.filter((o:any) => (o.curso).toString() === name&&o.detalle[1].porpagar!=0).length;
+
+  getCountnoTotal(name:any) {  
+    var suma=0;
+
+    for (const key in this.pagos_estudiante[name]) {
+      if (Object.prototype.hasOwnProperty.call(this.pagos_estudiante[name], key)) {
+        const element = this.pagos_estudiante[name][key];
+        suma=suma+element.filter((o:any) => o.detalle[1].porpagar!=0).length;
+      }
+    }
+
+
+    return suma;
   }
   sumarvalores(valores:any){
   var suma=0;
@@ -1148,14 +1152,15 @@ getCount(name:any) {
     this.mcash=Number(this.mcash);
     this.exportarcash();
     }
-  sumarrecuadado(indice:any, label:any){
+  sumarrecuadado(indice:any, curso:any,paralelo:any){
   var suma=0;
-  var aux=Object.assign(this.pagos_estudiante);
+  var aux=Object.assign(this.pagos_estudiante[curso][paralelo]);
+
   if(indice!=12){
     aux.forEach((element:any) => {
       
       try {
-        if((element.curso+element.paralelo).toString() === label && element.detalle[indice] && element.detalle[indice].valor>=0){
+        if(element.detalle[indice] && element.detalle[indice].valor>=0){
           suma=element.detalle[indice].valor+suma;
         }	
       } catch (error) {
@@ -1163,16 +1168,16 @@ getCount(name:any) {
       }
       
     });
+
+    
   }else{
     aux.forEach((element:any) => {
-    
-      if((element.curso+element.paralelo).toString() === label ){
-        element.detalle.forEach((elementdt:any) => {
-          
-          suma=elementdt.valor+suma;
-        });
-        
-      }
+      
+      element.detalle.forEach((elementdt:any) => {
+      
+        suma=elementdt.valor+suma;
+      });
+      
     });
   }
   
