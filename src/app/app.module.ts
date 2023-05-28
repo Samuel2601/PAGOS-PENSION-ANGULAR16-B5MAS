@@ -50,6 +50,8 @@ import { MenuDashboardComponent } from './components/dashboard/menu-dashboard/me
 registerLocaleData(localeES, 'es');
 
 import './polyfills/polyfills';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { GraficSpComponent } from './components/dashboard/stundes-payments/grafic-sp/grafic-sp.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -81,7 +83,9 @@ import './polyfills/polyfills';
     LinkHeaderComponent,
     IndexDocumentComponent,
     DetailStudentsComponent,
-    MenuDashboardComponent
+    MenuDashboardComponent,
+    DashboardComponent,
+    GraficSpComponent
   ],
   imports: [    
     BrowserModule,

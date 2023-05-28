@@ -1,1 +1,104 @@
-<p>control-admins works!</p>
+
+
+        <div class="card-header">
+          <!-- Title -->
+          <h4 class="card-header-title">Registro</h4>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col">
+              <div class="input-group input-group-merge">
+                <input
+                  type="text"
+                  class="form-control form-control-appended"
+                  placeholder="Buscar correo, Fecha, proceso"
+                  name="filtro"
+                  [(ngModel)]="filtro"
+                />
+                <div class="input-group-append">
+                  <button
+                    class="btn btn-primary"
+                    (click)="filtrar_documento()"
+                  >
+                    Buscar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <ng-container *ngIf="resgistro_arr.length != 0">
+          <div class="table-responsive">
+            <table class="table table-sm table-nowrap card-table">
+              <thead>
+                <tr>
+                  <th>Admin</th>
+                  <th>Fecha</th>
+                  <th>Proceso</th>
+                  <th>Accción</th>
+                </tr>
+              </thead>
+              <tbody class="font-size-base">
+                <ng-container
+                  *ngFor="
+                    let item of resgistro_arr
+                      | slice
+                        : (page - 1) * pageSize
+                        : (page - 1) * pageSize + pageSize
+                  "
+                >
+                  <tr *ngIf="resgistro_arr != undefined">
+                    <td>
+                      <div class="d-flex align-items-center">
+                        <div class="ms-3">
+                          <ng-container *ngIf="item.admin != null">
+                            <h4 class="fw-normal mb-1">
+                              {{ item.admin.nombres }}
+                              {{ item.admin.apellidos }}
+                            </h4>
+                            <!-- Text -->
+                            <span>{{ item.admin.email }} </span>
+                          </ng-container>
+                          <!-- Heading -->
+                          <ng-container *ngIf="item.admin == null">
+                            ADMIN INCORP
+                          </ng-container>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      {{ item.createdAt | date : "short" }}
+                    </td>
+                    <td>
+                      {{ item.tipo }}
+                    </td>
+                    <td>
+                      {{ item.descripcion }}
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+
+          <ngb-pagination
+            *ngIf="resgistro_arr.length >= 1"
+            [(page)]="page"
+            [pageSize]="pageSize"
+            [maxSize]="10"
+            [rotate]="true"
+            [boundaryLinks]="true"
+            [collectionSize]="resgistro_arr.length"
+          ></ngb-pagination>
+        </ng-container>
+
+        <ng-container *ngIf="resgistro_arr.length == 0">
+          <div
+            class="alert alert-danger"
+            *ngIf="resgistro_arr.length == 0"
+          >
+            <i class="fe fe-info mr-1"></i> No tienes Registro
+          </div>
+        </ng-container>
+
+

@@ -1,7 +1,7 @@
 import { Routes, RouterModule } from '@angular/router';
 import { ModuleWithProviders } from '@angular/core';
 
-import { StundesPaymentsComponent } from './components/dashboard/stundes-payments/stundes-payments.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 import { LoginComponent } from './components/user/login/login.component';
 import { RegistroComponent } from './components/user/registro/registro.component';
@@ -35,7 +35,7 @@ const appRoute: Routes = [
 
 	
 
-	{ path: 'dashboard', component: StundesPaymentsComponent, canActivate: [AuthGuard] },
+	{ path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
 	{ path: 'control', component: PanelAdminComponent, canActivate: [AuthGuard] },
 	{ path: 'login', component: LoginComponent },
 	{ path: 'registrate', component: RegistroComponent },
