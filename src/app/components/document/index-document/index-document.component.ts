@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AdminService } from 'src/app/service/admin.service';
 import { GLOBAL } from 'src/app/service/GLOBAL';
 
-declare var iziToast: any;
+import iziToast from 'izitoast';
 declare var $: any;
 
 @Component({
@@ -103,11 +103,8 @@ export class IndexDocumentComponent implements OnInit {
 					(response) => {
 						con++;
 						if (con == ultimo) {
-							iziToast.show({
-								title: 'SUCCESS',
-								titleColor: '#1DC74C',
-								color: '#FFF',
-								class: 'iziToast-success',
+							iziToast.success({
+								title: 'ÉXITOSO',
 								position: 'topRight',
 								message: 'Se eliminó correctamente el(los) documento.' + '(' + con + ')',
 							});
@@ -151,20 +148,14 @@ export class IndexDocumentComponent implements OnInit {
 		this._adminService.eliminar_documento_admin(id, this.token).subscribe(
 			(response) => {
 				if (response.message == 'Eliminado con exito') {
-					iziToast.show({
-						title: 'SUCCESS',
-						titleColor: '#1DC74C',
-						color: '#FFF',
-						class: 'text-success',
+					iziToast.success({
+						title: 'ÉXITOSO',
 						position: 'topRight',
 						message: response.message,
 					});
 				} else {
-					iziToast.show({
-						title: 'DANGER',
-						titleColor: 'RED',
-						color: 'RED',
-						class: 'text-success',
+					iziToast.error({
+						title: 'ERROR',
 						position: 'topRight',
 						message: response.message,
 					});

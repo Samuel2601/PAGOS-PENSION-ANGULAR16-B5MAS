@@ -5,7 +5,7 @@ import { EstudianteService } from 'src/app/service/student.service';
 import { GLOBAL } from 'src/app/service/GLOBAL';
 import { TableUtil, TableUtil2 } from '../show-payments/tableUtil';
 //import {createClient} from 'soap';
-declare var iziToast: any;
+import iziToast from 'izitoast';
 declare var $: any;
 
 @Component({
@@ -224,18 +224,12 @@ export class ShowPaymentsComponent implements OnInit {
 					if (response.message) {
 						iziToast.info({
 							title: 'RESP API:',
-							titleColor: '#41CC62',
-							color: '#ADE6BB',
-							class: 'text-info',
 							position: 'topRight',
 							message: response.message,
 						});
 					} else {
-						iziToast.show({
-							title: 'DANGER',
-							class: 'text-danger',
-							titleColor: 'red',
-							color: 'red',
+						iziToast.error({
+							title: 'ERROR',
 							position: 'topRight',
 							message: 'Algo Salio mal',
 						});
@@ -245,11 +239,8 @@ export class ShowPaymentsComponent implements OnInit {
 					}, 1000);
 				});
 		} else {
-			iziToast.show({
+			iziToast.error({
 				title: 'DANGER',
-				class: 'text-danger',
-				titleColor: 'red',
-				color: 'red',
 				position: 'topRight',
 				message: this.error_constru,
 			});
@@ -635,20 +626,14 @@ export class ShowPaymentsComponent implements OnInit {
 					if (response.message) {
 						iziToast.info({
 							title: 'RESP API:',
-							titleColor: '#41CC62',
-							color: '#ADE6BB',
-							class: 'text-info',
 							position: 'topRight',
 							message: response.message,
 						});
 						this._adminService
 							.eliminar_finalizado_orden(this.pago._id, this.registro, this.token)
 							.subscribe((response) => {
-								iziToast.show({
-									title: 'SUCCESS',
-									titleColor: '#1DC74C',
-									color: '#FFF',
-									class: 'text-success',
+								iziToast.success({
+									title: 'ÉXITOSO',
 									position: 'topRight',
 									message: 'El pago fue registrado correctamente.',
 								});
@@ -657,11 +642,8 @@ export class ShowPaymentsComponent implements OnInit {
 								//wind.close();
 							});
 					} else {
-						iziToast.show({
+						iziToast.error({
 							title: 'DANGER',
-							class: 'text-danger',
-							titleColor: 'red',
-							color: 'red',
 							position: 'topRight',
 							message: 'Algo Salio mal',
 						});
@@ -671,11 +653,8 @@ export class ShowPaymentsComponent implements OnInit {
 					}, 1000);
 				});
 		} else {
-			iziToast.show({
+			iziToast.error({
 				title: 'DANGER',
-				class: 'text-danger',
-				titleColor: 'red',
-				color: 'red',
 				position: 'topRight',
 				message: this.error_constru,
 			});

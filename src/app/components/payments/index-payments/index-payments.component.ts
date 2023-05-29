@@ -2,7 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AdminService } from 'src/app/service/admin.service';
 declare var $: any;
-declare var iziToast: any;
+import iziToast from 'izitoast';
 
 @Component({
   selector: 'app-index-payments',
@@ -147,20 +147,14 @@ export class IndexPaymentsComponent implements OnInit {
 		this._adminService.eliminar_orden_admin(id, this.token).subscribe(
 			(response) => {
 				if (response.message == 'Eliminado con exito') {
-					iziToast.show({
+					iziToast.success({
 						title: 'SUCCESS',
-						titleColor: '#1DC74C',
-						color: '#FFF',
-						class: 'text-success',
 						position: 'topRight',
 						message: response.message,
 					});
 				} else {
-					iziToast.show({
-						title: 'DANGER',
-						titleColor: 'RED',
-						color: 'RED',
-						class: 'text-success',
+					iziToast.error({
+						title: 'ERROR',
 						position: 'topRight',
 						message: response.message,
 					});
@@ -194,11 +188,8 @@ export class IndexPaymentsComponent implements OnInit {
 					(response) => {
 						con++;
 						if (con == ultimo) {
-							iziToast.show({
+							iziToast.success({
 								title: 'SUCCESS',
-								titleColor: '#1DC74C',
-								color: '#FFF',
-								class: 'iziToast-success',
 								position: 'topRight',
 								message: 'Se eliminó correctamente el(los) pago.' + '(' + con + ')',
 							});

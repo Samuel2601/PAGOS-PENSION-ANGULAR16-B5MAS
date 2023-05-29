@@ -6,7 +6,7 @@ import { AdminService } from 'src/app/service/admin.service';
 import { GLOBAL } from 'src/app/service/GLOBAL';
 
 declare var $: any;
-declare var iziToast: any;
+import iziToast from 'izitoast';
 
 @Component({
   selector: 'app-panel-admin',
@@ -76,11 +76,8 @@ export class PanelAdminComponent implements OnInit {
 		//console.log(idadmin);
 		this._adminService.actualizar_admininstitucion(idadmin, this.token).subscribe((response) => {
 			if (response.message) {
-				iziToast.show({
-					title: 'SUCCESS',
-					titleColor: '#1DC74C',
-					color: '#FFF',
-					class: 'iziToast-success',
+				iziToast.success({
+					title: 'ÉXITOSO',	
 					position: 'topRight',
 					message: response.message,
 				});
@@ -106,11 +103,8 @@ export class PanelAdminComponent implements OnInit {
 				this._router.navigate(['/dashboard']);
 				//console.log(response);
 			}else if(response.message){
-				iziToast.show({
+				iziToast.error({
 					title: 'ERROR',
-					titleColor: '#1DC74C',
-					color: '#FFF',
-					class: 'iziToast-danger',
 					position: 'topRight',
 					message: response.message,
 				});

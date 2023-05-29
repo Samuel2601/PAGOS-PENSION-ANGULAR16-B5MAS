@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { AdminService } from 'src/app/service/admin.service';
 
 declare var $: any;
-declare var iziToast: any;
+import iziToast from 'izitoast';
 
 @Component({
 	selector: 'app-login',
@@ -52,9 +52,8 @@ export class LoginComponent implements OnInit {
 			let password = loginForm.value.password;
 
 			if (email == '' && password == '') {
-				iziToast.show({
+				iziToast.error({
 					title: 'ERROR DATA',
-					class: 'iziToast-danger',
 					position: 'topRight',
 					message: 'Todos los campos son requeridos, vuelva a intentar.',
 				});
@@ -65,9 +64,8 @@ export class LoginComponent implements OnInit {
 
 						if (response.data != null) {
 							if (response.data.estado == 'Fuera' || response.data.estado == 'deshabilitado') {
-								iziToast.show({
+								iziToast.error({
 									title: 'ERROR USER',
-									class: 'iziToast-danger',
 									position: 'topRight',
 									message: 'Cuenta Suspendida',
 								});
@@ -101,18 +99,16 @@ export class LoginComponent implements OnInit {
 								}
 							}
 						} else {
-							iziToast.show({
+							iziToast.error({
 								title: 'ERROR USER',
-								class: 'iziToast-danger',
 								position: 'topRight',
 								message: response.message,
 							});
 						}
 					},
 					(error) => {
-						iziToast.show({
+						iziToast.error({
 							title: 'ERROR SERVER',
-							class: 'iziToast-danger',
 							position: 'topRight',
 							message: 'Ocurrió un error en el servidor, intente mas nuevamente.',
 						});
@@ -120,16 +116,14 @@ export class LoginComponent implements OnInit {
 				);
 			}
 		} else {
-			iziToast.show({
+			iziToast.error({
 				title: 'ERROR DATA',
-				class: 'iziToast-danger',
 				position: 'topRight',
 				message: 'Complete correctamente el formulario.',
 			});
 			if (!this.geo) {
-				iziToast.show({
+				iziToast.error({
 					title: 'ERROR DATA',
-					class: 'iziToast-danger',
 					position: 'topRight',
 					message: 'No se te puede ubicar',
 				});
@@ -142,11 +136,8 @@ export class LoginComponent implements OnInit {
 		if (event.target.files && event.target.files[0]) {
 			file = <File>event.target.files[0];
 		} else {
-			iziToast.show({
+			iziToast.error({
 				title: 'ERROR',
-				titleColor: '#FF0000',
-				color: '#FFF',
-				class: 'text-danger',
 				position: 'topRight',
 				message: 'No hay un imagen de envio',
 			});
@@ -163,11 +154,8 @@ export class LoginComponent implements OnInit {
 				$('#input-portada').text(file.name);
 				this.file = file;
 			} else {
-				iziToast.show({
+				iziToast.error({
 					title: 'ERROR',
-					titleColor: '#FF0000',
-					color: '#FFF',
-					class: 'text-danger',
 					position: 'topRight',
 					message: 'El archivo debe ser una imagen png',
 				});
@@ -176,11 +164,8 @@ export class LoginComponent implements OnInit {
 				this.file = undefined;
 			}
 		} else {
-			iziToast.show({
+			iziToast.error({
 				title: 'ERROR',
-				titleColor: '#FF0000',
-				color: '#FFF',
-				class: 'text-danger',
 				position: 'topRight',
 				message: 'La imagen no puede superar los 4MB',
 			});
@@ -198,26 +183,23 @@ export class LoginComponent implements OnInit {
 				this.admin.portada = this.file;
 				if (this.admin.passwordadmin != this.admin.auxiliar) {
 					//document.getElementById('auxiliar').style.borderColor = 'Red';
-					iziToast.show({
+					iziToast.error({
 						title: 'ERROR',
-						class: 'iziToast-danger',
 						position: 'topRight',
 						message: 'No coincide las contraseñas',
 					});
 				} else {
 					this._adminService.registrar_admin(this.admin, this.file).subscribe((response) => {
 						if (response.message == 'Registrado con exito') {
-							iziToast.show({
+							iziToast.success({
 								title: 'APROBADO',
-								class: 'iziToast-success',
 								position: 'topRight',
 								message: response.message,
 							});
 							window.location.reload();
 						} else {
-							iziToast.show({
+							iziToast.error({
 								title: 'ERROR USER',
-								class: 'iziToast-danger',
 								position: 'topRight',
 								message: response.message,
 							});
@@ -225,11 +207,8 @@ export class LoginComponent implements OnInit {
 					});
 				}
 			} else {
-				iziToast.show({
+				iziToast.error({
 					title: 'ERROR',
-					titleColor: '#FF0000',
-					color: '#FFF',
-					class: 'text-danger',
 					position: 'topRight',
 					message: 'Debe subir una portada para registrar',
 				});

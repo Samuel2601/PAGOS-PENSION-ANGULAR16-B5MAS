@@ -5,7 +5,7 @@ import { AdminService } from 'src/app/service/admin.service';
 import { GLOBAL } from 'src/app/service/GLOBAL';
 import { EstudianteService } from 'src/app/service/student.service';
 import { ConfigService } from 'src/app/service/config.service';
-declare var iziToast: any;
+import iziToast from 'izitoast';
 declare var $: any;
 @Component({
   selector: 'app-detail-students',

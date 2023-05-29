@@ -1,1 +1,32 @@
-<p>link-header works!</p>
+
+<div class="modal-header" >
+    <h4 class="modal-title">Vincular Encabezado</h4>
+    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+    
+  </div>
+  <div class="modal-body">
+    <p>Selecciona el encabezado correspondiente para cada campo de proveedor:</p>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Encabezado</th>
+          <th>Nombre del Campo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let proveedor of proveedores">
+          <td>
+            <select [(ngModel)]="proveedor.encabezado" class="form-control">
+              <option value="" disabled>-- Seleccione un Encabezado --</option>
+              <option *ngFor="let encabezado of encabezados" [value]="encabezado">{{encabezado}}</option>
+            </select>
+          </td>
+          <td>{{proveedor.label}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="cerrarVentana()">Cerrar</button>
+    <button type="button" class="btn btn-primary" (click)="guardar()">Guardar</button>
+  </div>

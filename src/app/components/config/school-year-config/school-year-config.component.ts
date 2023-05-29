@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AdminService } from 'src/app/service/admin.service';
 import { ConfigService } from 'src/app/service/config.service';
-declare var iziToast: any;
+import iziToast from 'izitoast';
 declare var $: any;
 
 @Component({
@@ -63,11 +63,8 @@ export class SchoolYearConfigComponent implements OnInit {
 				this.fechas(1);
 				this._adminService.actualizar_config_admin(this.config_const, this.token).subscribe(
 					(response) => {
-						iziToast.show({
-							title: 'SUCCESS',
-							titleColor: '#1DC74C',
-							color: '#FFF',
-							class: 'text-success',
+						iziToast.success({
+							title: 'ÉXITOSO',
 							position: 'topRight',
 							message: 'Se encuentra actualiza correctamente las configuraciones.',
 						});
@@ -107,11 +104,8 @@ export class SchoolYearConfigComponent implements OnInit {
 				valor:''};
 				$('#modalNuevoRubro').modal('hide');
 			}else{
-				iziToast.show({
+				iziToast.error({
 					title: 'DANGER',
-					titleColor: 'RED',
-					color: 'RED',
-					class: 'text-success',
 					position: 'topRight',
 					message: 'Ya existe ese código de rubro',
 				});
@@ -127,11 +121,8 @@ export class SchoolYearConfigComponent implements OnInit {
 				this.uniqueArray=JSON.stringify(this.arr_rubro) === JSON.stringify(this.arr_rubro_const);
 				//console.log(this.uniqueArray);
 			}else{
-				iziToast.show({
+				iziToast.error({
 					title: 'DANGER',
-					titleColor: 'RED',
-					color: 'RED',
-					class: 'text-success',
 					position: 'topRight',
 					message: 'Hay pagos bajo este rubro',
 				});
@@ -147,11 +138,8 @@ export class SchoolYearConfigComponent implements OnInit {
 			this._adminService.actualizar_config_admin(this.config, this.token).subscribe(
 				(response) => {
 					$('#modalRubro').modal('hide');
-					iziToast.show({
-						title: 'SUCCESS',
-						titleColor: '#1DC74C',
-						color: '#FFF',
-						class: 'text-success',
+					iziToast.success({
+						title: 'ÉXITOSO',
 						position: 'topRight',
 						message: 'Se encuentra actualiza correctamente las configuraciones.',
 					});
@@ -181,20 +169,14 @@ export class SchoolYearConfigComponent implements OnInit {
 					(response) => {
 						//console.log(response);
 						if (response.message == undefined) {
-							iziToast.show({
-								title: 'SUCCESS',
-								titleColor: '#1DC74C',
-								color: '#FFF',
-								class: 'text-success',
+							iziToast.success({
+								title: 'ÉXITOSO',
 								position: 'topRight',
 								message: 'Se actualizó correctamente las configuraciones.',
 							});
 						} else {
-							iziToast.show({
-								title: 'DANGER',
-								titleColor: 'RED',
-								color: 'RED',
-								class: 'text-success',
+							iziToast.error({
+								title: 'PELIGRO',
 								position: 'topRight',
 								message: response.message,
 							});
@@ -214,22 +196,15 @@ export class SchoolYearConfigComponent implements OnInit {
 			} else {
 				$('#modalConfirmar').modal('hide');
 				this.load_btn = false;
-				iziToast.show({
-					title: 'DANGER',
-					titleColor: 'RED',
-					color: 'RED',
-					class: 'text-success',
+				iziToast.error({
+					title: 'PELIGRO',
 					position: 'topRight',
-					message:
-						'No se puede añadir un nuevo perido si es menor o igual al actual y ya hayan pasado los 10 meses ',
+					message:'No se puede añadir un nuevo perido si es menor o igual al actual y ya hayan pasado los 10 meses ',
 				});
 			}
 		} else {
-			iziToast.show({
+			iziToast.error({
 				title: 'ERROR',
-				titleColor: '#FF0000',
-				color: '#FFF',
-				class: 'text-danger',
 				position: 'topRight',
 				message: 'Los datos del formulario no son validos',
 			});

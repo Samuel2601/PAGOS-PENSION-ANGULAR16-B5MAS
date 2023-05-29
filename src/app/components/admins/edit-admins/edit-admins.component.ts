@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AdminService } from 'src/app/service/admin.service';
 import { EstudianteService } from 'src/app/service/student.service';
 import { GLOBAL } from 'src/app/service/GLOBAL';
-declare var iziToast: any;
+import iziToast from 'izitoast';
 declare var $: any;
 
 @Component({
@@ -99,11 +99,8 @@ export class EditAdminsComponent implements OnInit {
 			this.estudiante.password != this.estudiante.auxiliar ||
 			(this.estudiante.password != '' && this.estudiante.password.length < 8)
 		) {
-			iziToast.show({
+			iziToast.error({
 				title: 'ERROR',
-				class: 'text-DANGER',
-				titleColor: 'red',
-				color: 'red',
 				position: 'topRight',
 				message: 'Contraseña, minimo 8 caracteres',
 			});
@@ -114,22 +111,16 @@ export class EditAdminsComponent implements OnInit {
 				this.load_btn = true;
 				this._adminService.actualizar_admin(this.id, this.estudiante, this.token).subscribe((response) => {
 					if (response.message == 'Actualizado con exito') {
-						iziToast.show({
-							title: 'SUCCESS',
-							class: 'text-success',
-							titleColor: 'green',
-							color: 'green',
+						iziToast.success({
+							title: 'ÉXITOSO',
 							position: 'topRight',
 							message: response.message,
 						});
 						this.load_btn = false;
 						this._router.navigate(['/estudiantes']);
 					} else {
-						iziToast.show({
-							title: 'DANGER',
-							class: 'text-DANGER',
-							titleColor: 'red',
-							color: 'red',
+						iziToast.error({
+							title: 'ERROR',
 							position: 'topRight',
 							message: response.message,
 						});

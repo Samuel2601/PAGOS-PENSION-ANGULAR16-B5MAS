@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AdminService } from 'src/app/service/admin.service';
 declare var $: any;
-declare var iziToast: any;
+import iziToast from 'izitoast';
 @Component({
   selector: 'app-sidebar-log',
   templateUrl: './sidebar-log.component.html',

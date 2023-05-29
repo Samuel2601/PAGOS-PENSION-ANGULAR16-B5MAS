@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AdminService } from 'src/app/service/admin.service';
 import { EstudianteService } from 'src/app/service/student.service';
 import { GLOBAL } from 'src/app/service/GLOBAL';
-declare var iziToast: any;
+import iziToast from 'izitoast';
 declare var $: any;
 
 
@@ -239,11 +239,8 @@ export class EditStudentsComponent implements OnInit {
 			).toFixed(2);
 			this.pension.val_beca = this.estudiante.val_beca;
 		} else {
-			iziToast.show({
-				title: 'Warinng',
-				titleColor: 'red',
-				color: 'red',
-				class: 'text-warning',
+			iziToast.warning({
+				title: 'PELIGRO',
 				position: 'topRight',
 				message: 'Descuento Invalido',
 			});
@@ -262,11 +259,8 @@ export class EditStudentsComponent implements OnInit {
 			this.estudiante.desc_beca =  (100-(this.estudiante.val_beca *100) / this.valores_pensiones).toFixed(2);
 			this.pension.desc_beca = this.estudiante.desc_beca;
 		} else {
-			iziToast.show({
-				title: 'Warinng',
-				titleColor: 'red',
-				color: 'red',
-				class: 'text-warning',
+			iziToast.warning({
+				title: 'PELIGRO',
 				position: 'topRight',
 				message: 'Valor Invalido',
 			});
@@ -305,32 +299,23 @@ export class EditStudentsComponent implements OnInit {
 						this.estudiante.num_mes_beca = this.arr_etiquetas.length;
 					}
 					if (this.estudiante.desc_beca == undefined) {
-						iziToast.show({
-							title: 'DANGER',
-							titleColor: 'red',
-							color: 'red',
-							class: 'text-warning',
+						iziToast.error({
+							title: 'ERROR',
 							position: 'topRight',
 							message: 'Debe el descuento de la Beca',
 						});
 					}
 					if (this.estudiante.val_beca == undefined) {
-						iziToast.show({
-							title: 'DANGER',
-							titleColor: 'red',
-							color: 'red',
-							class: 'text-warning',
+						iziToast.error({
+							title: 'ERROR',
 							position: 'topRight',
 							message: 'Debe valor de la beca Beca',
 						});
 					}
 
 					if (this.arr_etiquetas.length == 0) {
-						iziToast.show({
+						iziToast.error({
 							title: 'DANGER',
-							titleColor: 'red',
-							color: 'red',
-							class: 'text-warning',
 							position: 'topRight',
 							message: 'Debe seleccionar los meses con Beca',
 						});
@@ -346,11 +331,8 @@ export class EditStudentsComponent implements OnInit {
 					this._estudianteService.actualizar_estudiante_admin(this.id, this.estudiante, this.token).subscribe(
 						(response) => {
 							if (response.message == 'Actualizado con exito') {
-								iziToast.show({
+								iziToast.success({
 									title: 'SUCCESS',
-									titleColor: '#1DC74C',
-									color: '#FFF',
-									class: 'text-success',
 									position: 'topRight',
 									message: response.message,
 								});
@@ -359,11 +341,8 @@ export class EditStudentsComponent implements OnInit {
 
 								this._router.navigate(['/estudiantes']);
 							} else {
-								iziToast.show({
-									title: 'DANGER',
-									titleColor: 'red',
-									color: 'red',
-									class: 'text-warning',
+								iziToast.error({
+									title: 'ERROR',
 									position: 'topRight',
 									message: response.message,
 								});
@@ -377,11 +356,8 @@ export class EditStudentsComponent implements OnInit {
 					);
 				}
 			} else {
-				iziToast.show({
+				iziToast.error({
 					title: 'ERROR',
-					titleColor: '#FF0000',
-					color: '#FFF',
-					class: 'text-danger',
 					position: 'topRight',
 					message: 'Los datos del formulario no son validos',
 				});

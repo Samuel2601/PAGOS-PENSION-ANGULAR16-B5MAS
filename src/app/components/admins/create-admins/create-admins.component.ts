@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AdminService } from 'src/app/service/admin.service';
 import { EstudianteService } from 'src/app/service/student.service';
-declare var iziToast: any;
+import iziToast from 'izitoast';
 
 @Component({
   selector: 'app-create-admins',
@@ -60,11 +60,8 @@ export class CreateAdminsComponent implements OnInit {
 
 	registro(registroForm: { valid: any }) {
 		if (this.estudiante.password != this.estudiante.auxiliar) {
-			iziToast.show({
-				title: 'DANGER',
-				class: 'text-danger',
-				titleColor: 'red',
-				color: 'red',
+			iziToast.error({
+				title: 'ERROR',
 				position: 'topRight',
 				message: 'Las contraseñas no coinciden',
 			});
@@ -79,11 +76,8 @@ export class CreateAdminsComponent implements OnInit {
 					(response) => {
 						////console.log(response);
 						if (response.message == 'Registrado con exito') {
-							iziToast.show({
-								title: 'SUCCESS',
-								titleColor: '#1DC74C',
-								color: '#FFF',
-								class: 'text-success',
+							iziToast.success({
+								title: 'ÉXITOSO',
 								position: 'topRight',
 								message: response.message,
 							});
@@ -92,11 +86,8 @@ export class CreateAdminsComponent implements OnInit {
 
 							this._router.navigate(['/administrativo']);
 						} else {
-							iziToast.show({
-								title: 'DANGER',
-								titleColor: 'RED',
-								color: 'RED',
-								class: 'text-dannger',
+							iziToast.error({
+								title: 'ERROR',
 								position: 'topRight',
 								message: response.message,
 							});
@@ -108,11 +99,8 @@ export class CreateAdminsComponent implements OnInit {
 					}
 				);
 			} else {
-				iziToast.show({
+				iziToast.error({
 					title: 'ERROR',
-					titleColor: '#FF0000',
-					color: '#FFF',
-					class: 'text-danger',
 					position: 'topRight',
 					message: 'Los datos del formulario no son validos',
 				});

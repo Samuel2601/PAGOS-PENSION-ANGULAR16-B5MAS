@@ -14211,3 +14211,28 @@ button:focus {
 .factura{
   color: #8e6cb6 ;
 }
+
+.ngx-file-drop__drop-zone{
+  height:100% !important;
+  margin:auto !important;
+  border:2px dotted #6d41a1 !important;
+  border-radius:30px !important
+}
+
+  .ngx-file-drop__drop-zone--over{
+    height:100% !important;
+    background-color:#93939380 !important
+  }
+  .ngx-file-drop__content{
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    height:100% !important;
+    color:#6d41a1 !important
+  }
+  .ngx-file-drop__drop-zone-label{
+    text-align:center !important
+  }
+  .ngx-file-drop__file-input{
+    display:none !important
+  }

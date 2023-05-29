@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { AdminService } from 'src/app/service/admin.service';
 import { EstudianteService } from 'src/app/service/student.service';
 declare var $: any;
-declare var iziToast: any;
+import iziToast from 'izitoast';
 
 @Component({
   selector: 'app-create-payments',
@@ -265,11 +265,8 @@ public arr_rubro_const=[];
 			
 		}
 		if (this.idpension == false) {
-			iziToast.show({
+			iziToast.error({
 				title: 'ERROR',
-				titleColor: '#FF0000',
-				color: '#FFF',
-				class: 'text-danger',
 				position: 'topRight',
 				message: 'Este estudiante no tiene más pagos por cobrar',
 			});
@@ -393,22 +390,16 @@ public arr_rubro_const=[];
 				(response) => {
 					//console.log(response);
 					if (response.data == undefined) {
-						iziToast.show({
+						iziToast.error({
 							title: 'ERROR',
-							titleColor: '#FF0000',
-							color: '#FFF',
-							class: 'text-danger',
 							position: 'topRight',
 							message: response.message,
 						});
 						this.load_btn = false;
 					} else {
 						let auxdocumento = response.data;
-						iziToast.show({
-							title: 'SUCCESS',
-							titleColor: '#1DC74C',
-							color: '#FFF',
-							class: 'text-success',
+						iziToast.success({
+							title: 'ÉXITOSO',
 							position: 'topRight',
 							message: 'Se registro correctamente el nuevo documento.',
 						});
@@ -435,11 +426,8 @@ public arr_rubro_const=[];
 
 			this.load_btn = false;
 		} else {
-			iziToast.show({
+			iziToast.error({
 				title: 'ERROR',
-				titleColor: '#FF0000',
-				color: '#FFF',
-				class: 'text-danger',
 				position: 'topRight',
 				message: 'Los datos del formulario no son validos',
 			});
@@ -538,11 +526,8 @@ public arr_rubro_const=[];
               this.addDocumento2(auxpago.valor);
             }
 					}else{
-						iziToast.show({
+						iziToast.error({
 							title: 'ERROR',
-							titleColor: '#FF0000',
-							color: '#FFF',
-							class: 'text-danger',
 							position: 'topRight',
 							message: 'Error no selecciono valor',
 						});
@@ -552,11 +537,8 @@ public arr_rubro_const=[];
 				}
 			}
 		} else {
-			iziToast.show({
+			iziToast.error({
 				title: 'ERROR',
-				titleColor: '#FF0000',
-				color: '#FFF',
-				class: 'text-danger',
 				position: 'topRight',
 				message: 'Seleccione el documento',
 			});
@@ -646,7 +628,6 @@ public arr_rubro_const=[];
 								if (this.valor != debe) {
 									iziToast.info({
 										title: 'INFO',
-										class: 'text-info',
 										position: 'topRight',
 										message: 'Tenía un abono dado',
 									});
@@ -654,8 +635,6 @@ public arr_rubro_const=[];
 							} else {
 								iziToast.info({
 									title: 'INFO',
-
-									class: 'text-info',
 									position: 'topRight',
 									message: 'Se da como abono',
 								});
@@ -726,7 +705,6 @@ public arr_rubro_const=[];
 			} else {
 				iziToast.warning({
 					title: 'ERROR',
-					class: 'text-info',
 					position: 'topRight',
 					message: 'Sin fondos',
 				});
@@ -739,11 +717,8 @@ public arr_rubro_const=[];
 				});
 			}
 		} else {
-			iziToast.show({
+			iziToast.error({
 				title: 'ERROR',
-				titleColor: '#FF0000',
-				color: '#FFF',
-				class: 'text-danger',
 				position: 'topRight',
 				message: 'Valor no valido',
 			});
@@ -794,11 +769,8 @@ public arr_rubro_const=[];
 			this.rol.dni = undefined;
 
 			if (this.rol == undefined || this.rol.estado == 'Fuera' || this.rol.estado == 'deshabilitado') {
-				iziToast.show({
+				iziToast.error({
 					title: 'ERROR',
-					titleColor: '#FF0000',
-					color: '#FFF',
-					class: 'text-danger',
 					position: 'topRight',
 					message: 'No puedes crear pagos',
 				});
@@ -810,20 +782,14 @@ public arr_rubro_const=[];
 				this.pago.detalles = this.dpago;
 
 				if (!this.pago.estudiante) {
-					iziToast.show({
+					iziToast.error({
 						title: 'ERROR',
-						titleColor: '#FF0000',
-						color: '#FFF',
-						class: 'text-danger',
 						position: 'topRight',
 						message: 'Debe seleccionar al estudiante.',
 					});
 				} else if (this.dpago.length == 0) {
-					iziToast.show({
+					iziToast.error({
 						title: 'ERROR',
-						titleColor: '#FF0000',
-						color: '#FFF',
-						class: 'text-danger',
 						position: 'topRight',
 						message: 'Debe agregar al menos un documento al pago.',
 					});

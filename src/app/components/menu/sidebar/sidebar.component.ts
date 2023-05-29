@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { AdminService } from 'src/app/service/admin.service';
 import { GLOBAL } from 'src/app/service/GLOBAL';
 import { ConfigService } from 'src/app/service/config.service';
-declare var iziToast: any;
+import iziToast from 'izitoast';
 declare var $: any;
 
 @Component({
@@ -49,15 +49,15 @@ export class SidebarComponent implements OnInit {
         this.darkStylesheet.disabled = true; // Deshabilita el estilo oscuro
        
       } else if(tema=='theme-dark') {
+		this.darkStylesheet.disabled = false; // Habilita el estilo oscuro
+
         this.lightStylesheet.disabled = true; // Deshabilita el estilo claro
         this.cosmicStylesheet.disabled=true;
-
-        this.darkStylesheet.disabled = false; // Habilita el estilo oscuro
-        
       }else{
+		this.cosmicStylesheet.disabled=false;
         this.darkStylesheet.disabled = true; 
         this.lightStylesheet.disabled = true;
-        this.cosmicStylesheet.disabled=false;
+        
       }
     }
   }

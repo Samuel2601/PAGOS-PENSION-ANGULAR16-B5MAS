@@ -1,4 +1,4 @@
-import {LOCALE_ID, NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule,NO_ERRORS_SCHEMA} from '@angular/core';
 
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -48,10 +48,11 @@ import { registerLocaleData } from '@angular/common';
 import { MenuDashboardComponent } from './components/dashboard/menu-dashboard/menu-dashboard.component';
 
 registerLocaleData(localeES, 'es');
-
+import { NgxFileDropModule } from 'ngx-file-drop';
 import './polyfills/polyfills';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { GraficSpComponent } from './components/dashboard/stundes-payments/grafic-sp/grafic-sp.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -88,6 +89,7 @@ import { GraficSpComponent } from './components/dashboard/stundes-payments/grafi
     GraficSpComponent
   ],
   imports: [    
+    NgxFileDropModule,
     BrowserModule,
     AppRoutingModule,
     routing,
@@ -105,6 +107,7 @@ import { GraficSpComponent } from './components/dashboard/stundes-payments/grafi
   exports:[
     
   ],
+  schemas: [NO_ERRORS_SCHEMA],
   providers: [{ provide: LOCALE_ID, useValue: 'es' }],
   bootstrap: [AppComponent]
 })

@@ -14221,3 +14221,27 @@ button:focus {
 .offcanvas {
   background-color: #152e4d !important;
 }
+.ngx-file-drop__drop-zone{
+  height:100% !important;
+  margin:auto !important;
+  border:2px dotted #0782d0 !important;
+  border-radius:30px !important
+}
+
+  .ngx-file-drop__drop-zone--over{
+    height:100% !important;
+    background-color:#93939380 !important
+  }
+  .ngx-file-drop__content{
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    height:100% !important;
+    color:#0782d0 !important
+  }
+  .ngx-file-drop__drop-zone-label{
+    text-align:center !important
+  }
+  .ngx-file-drop__file-input{
+    display:none !important
+  }
