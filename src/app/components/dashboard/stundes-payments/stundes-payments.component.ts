@@ -108,7 +108,7 @@ actualizar_estudiante(){
 }
 public horaact:any;
 detalle_data(val: any) {
-  console.log(this.active,val);
+  //console.log(this.active,val);
   if (this.active != val) {
     this.active = val;
     this.nmt = 0;
@@ -287,7 +287,7 @@ armado_matriz(val:any,costosextrapagos:any,costopension:any,costomatricula:any){
           });
           this._configService.setProgress(this._configService.getProgress()+5);
           this._adminService.listar_pensiones_estudiantes_tienda(localStorage.getItem('token'),this.config[val].anio_lectivo).subscribe((response) => {
-            console.log(response.data);
+            //console.log(response.data);
             this.penest = response.data.map((item:any)=>{
               return{
                 curso:item.curso,
@@ -487,8 +487,6 @@ armado_matriz(val:any,costosextrapagos:any,costopension:any,costomatricula:any){
                     }
                     
                   
-                }else{
-                  console.log(elementpent);
                 }
               });
               this._configService.setProgress(this._configService.getProgress()+5);
@@ -1114,9 +1112,9 @@ getCount(name:any,name2?:any) {
 
     return aux.filter((o:any) => o.detalle[1].porpagar==0).length;
   } catch (error) {
-    console.log(this.pagos_estudiante);
-    console.log(name,name2);
-    console.log(error);
+    //console.log(this.pagos_estudiante);
+    //console.log(name,name2);
+    //console.log(error);
   }
   
   }
@@ -1125,8 +1123,8 @@ getCount(name:any,name2?:any) {
       var aux=Object.assign(this.pagos_estudiante[name][name2]);
       return aux.filter((o:any) => o.detalle[1].porpagar!=0).length;
     } catch (error) {
-      console.log(name,name2);
-      console.log(error);
+      //console.log(name,name2);
+     // console.log(error);
     }
 
   }

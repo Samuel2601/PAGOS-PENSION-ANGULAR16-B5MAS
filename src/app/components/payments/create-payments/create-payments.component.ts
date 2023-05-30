@@ -804,12 +804,12 @@ public arr_rubro_const=[];
 					this.pago.tipo_tarifa = 0;
 					this.pago.config=this.config;
 
-					console.log(this.pago);
+					//console.log(this.pago);
 					
 					this._adminService
 						.registro_compra_manual_estudiante(this.pago, this.token)
 						.subscribe((response) => {
-							console.log(response);
+							//console.log(response);
 							this.load_btn = false;
 
 							this._router.navigate(['/pagos/' + response.pago._id]);

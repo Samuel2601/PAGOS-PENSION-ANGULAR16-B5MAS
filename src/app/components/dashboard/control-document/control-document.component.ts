@@ -115,7 +115,7 @@ export class ControlDocumentComponent implements OnInit{
 					itm.data = aux;
 				}
 				
-				console.log(this.documento_arr);
+				//console.log(this.documento_arr);
 				var canvas = <HTMLCanvasElement>document.getElementById('myChart2');
 				var ctx: CanvasRenderingContext2D | any;
 				ctx = canvas.getContext('2d');

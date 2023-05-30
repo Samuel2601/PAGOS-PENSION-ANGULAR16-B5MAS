@@ -9,7 +9,7 @@ import iziToast from 'izitoast';
 @Component({
 	selector: 'app-login',
 	templateUrl: './login.component.html',
-	styleUrls: ['./login.component.scss','../../../../assets/css/theme-comic-origin.min.css'],
+	styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
 	public imgSelect: any | ArrayBuffer = 'assets/img/01.jpg';

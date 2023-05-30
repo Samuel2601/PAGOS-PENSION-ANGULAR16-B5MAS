@@ -9,8 +9,7 @@ declare var $: any;
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
-  styleUrls: [
-  "../../../../../node_modules/bootstrap/dist/css/bootstrap.css",'./sidebar.component.scss',]
+  styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent implements OnInit {
 
@@ -115,7 +114,7 @@ export class SidebarComponent implements OnInit {
 				//console.log(response);
 				if(response){
 					this.pagos=response;
-					if(this.facu.getDay()!=1){
+					if(this.facu.getDate()!=1){
 						this.facu=new Date(this.facu.getFullYear()+'-'+(this.facu.getMonth()+2).toString()+'-1');
 						//console.log(this.facu);
 					}

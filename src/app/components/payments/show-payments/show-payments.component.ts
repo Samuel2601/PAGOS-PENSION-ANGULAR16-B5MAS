@@ -215,7 +215,7 @@ export class ShowPaymentsComponent implements OnInit {
 
 	factura_electronica_soap() {
 		this.armado();
-		console.log(this.registro);
+		//console.log(this.registro);
 		if (this.error_constru == '' && JSON.stringify(this.registro) != '{}') {
 			this._adminService
 				.marcar_finalizado_orden(this.pago._id, this.registro, this.token)

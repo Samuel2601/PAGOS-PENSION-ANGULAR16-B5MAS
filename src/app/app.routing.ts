@@ -72,6 +72,7 @@ const appRoute: Routes = [
 		component: EditAdminsComponent,
 		canActivate: [AuthGuard],
 	},
+	
 	{ path: 'egresos', component: DischargeComponent, canActivate: [AuthGuard] },
 	{ path: 'proveedores', component: SupplierComponent, canActivate: [AuthGuard] },
 

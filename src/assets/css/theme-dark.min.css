@@ -65,9 +65,9 @@ body {
   font-size: 0.9375rem;
   font-weight: 400;
   line-height: 1.5;
-  color: #fff;
+  color: #fff ;
   text-align: left;
-  background-color: #12263f;
+  background-color: #12263f ;
 }
 [tabindex="-1"]:focus:not(:focus-visible) {
   outline: 0 !important;
@@ -8176,23 +8176,23 @@ button.bg-white:hover {
     margin-left: 1.5rem !important;
   }
   .m-md-5 {
-    margin: 2.25rem !important;
+    margin: 3.25rem !important;
   }
   .mt-md-5,
   .my-md-5 {
-    margin-top: 2.25rem !important;
+    margin-top: 3.25rem !important;
   }
   .mr-md-5,
   .mx-md-5 {
-    margin-right: 2.25rem !important;
+    margin-right: 3.25rem !important;
   }
   .mb-md-5,
   .my-md-5 {
-    margin-bottom: 2.25rem !important;
+    margin-bottom: 3.25rem !important;
   }
   .ml-md-5,
   .mx-md-5 {
-    margin-left: 2.25rem !important;
+    margin-left: 3.25rem !important;
   }
   .m-md-6 {
     margin: 4.5rem !important;
@@ -11162,6 +11162,8 @@ a.text-white:hover {
 .navbar {
   border-width: 0 0 1px 0;
   border-style: solid;
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
 }
 .navbar-dark {
   background-color: #152e4d;
