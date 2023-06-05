@@ -11174,6 +11174,7 @@ a.text-white:hover {
   border-style: solid;
   padding-top: 0.5rem !important;
   padding-bottom: 0.5rem !important;
+  background-color: #323259 !important;
 }
 .navbar-dark {
   background-color: #152e4d;

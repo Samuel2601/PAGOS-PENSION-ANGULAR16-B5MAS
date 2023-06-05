@@ -1,4 +1,5 @@
-tabla1:[
+{
+    "tabla1":[
         {
             "No.": "1",
             "Descripción de campo": "Fecha de emisión",
@@ -81,7 +82,7 @@ tabla1:[
             "Etiqueta o tag en archivo XML": "<claveAcceso>"
         }
     ],
-    tabla2:[
+    "tabla2":[
         {
             "No.": "1",
             "Tipo de emisión": "Emisión normal",
@@ -89,51 +90,51 @@ tabla1:[
             "Requisito": "Obligatorio"
         }
     ],
-    tabla3:[
+    "tabla3":[
         {
             "No.": "1",
             "Nombre comprobante": "FACTURA",
-            "Código": "1",
+            "Código": "01",
             "Requisito": "Obligatorio",
             "\"Etiqueta o tag en archivo XML\"": "<codDoc>"
         },
         {
             "No.": "2",
             "Nombre comprobante": "LIQUIDACIÓN DE COMPRA DE BIENES Y PRESTACIÓN DE SERVICIOS",
-            "Código": "3",
+            "Código": "03",
             "Requisito": "Obligatorio",
             "\"Etiqueta o tag en archivo XML\"": "<codDoc>"
         },
         {
             "No.": "3",
             "Nombre comprobante": "NOTA DE CRÉDITO",
-            "Código": "4",
+            "Código": "04",
             "Requisito": "Obligatorio",
             "\"Etiqueta o tag en archivo XML\"": "<codDoc>"
         },
         {
             "No.": "4",
             "Nombre comprobante": "NOTA DE DÉBITO",
-            "Código": "5",
+            "Código": "05",
             "Requisito": "Obligatorio",
             "\"Etiqueta o tag en archivo XML\"": "<codDoc>"
         },
         {
             "No.": "5",
             "Nombre comprobante": "GUÍA DE REMISIÓN",
-            "Código": "6",
+            "Código": "06",
             "Requisito": "Obligatorio",
             "\"Etiqueta o tag en archivo XML\"": "<codDoc>"
         },
         {
             "No.": "6",
             "Nombre comprobante": "COMPROBANTE DE RETENCIÓN",
-            "Código": "7",
+            "Código": "07",
             "Requisito": "Obligatorio",
             "\"Etiqueta o tag en archivo XML\"": "<codDoc>"
         }
     ],
-    tabla4:[
+    "tabla4":[
         {
             "No.": "1",
             "Tipo de ambiente": "Pruebas",
@@ -147,7 +148,7 @@ tabla1:[
             "Requisito": "Obligatorio"
         }
     ],
-    table5:[
+    "table5":[
         {
             "No.": "1",
             "Identificación Receptor": "RUC",
@@ -167,7 +168,7 @@ tabla1:[
             "Razón Social": "\"PRUEBAS SERVICIO DE RENTAS INTERNAS\""
         }
     ],
-    table6:[
+    "table6":[
         {
             "No.": "1",
             "Tipo de identificación": "RUC",
@@ -199,7 +200,7 @@ tabla1:[
             "Requisito": "Obligatorio"
         }
     ],
-    table61:[
+    "table61":[
         {
             "No.": "1",
             "Estado del comprobante electrónico": "En procesamiento",
@@ -216,7 +217,7 @@ tabla1:[
             "SIGLAS": "NAT"
         }
     ],
-    table62:[
+    "table62":[
         {
             "Descripción": "Estándar de firma",
             "Especificación": "XadES_BES",
@@ -238,7 +239,7 @@ tabla1:[
             "Documentación técnica relacionada": "http://www.w3.org/2000/09/xmldsig#enveloped-signature"
         }
     ],
-    table8:[
+    "table8":[
         {
             "ETIQUETAS O TAGS": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
             "CARACTER": "Obligatorio",
@@ -318,7 +319,7 @@ tabla1:[
             "LONGITUD / FORMATO": "-"
         }
     ],
-    table9:[
+    "table9":[
         {
             "No.": "en archivo XML\""
         },
@@ -404,7 +405,7 @@ tabla1:[
             "\"Etiqueta o tag": "<claveAcceso>"
         }
     ],
-    table10:[
+    "table10":[
         {
             "No.": "1",
             "Ruta o Directorios": "Comprobantes generados",
@@ -441,7 +442,7 @@ tabla1:[
             "Observación": "Directorio donde no cumple esquemas o sin autorización de emisión."
         }
     ],
-    table11:[
+    "table11":[
         {
             "No.": "1",
             "Descripción (emisor o agente de retención)": "Número de RUC",
@@ -530,7 +531,7 @@ tabla1:[
             "Requisito": "Obligatorio"
         }
     ],
-    table12:[
+    "table12":[
         {
             "No.": "1",
             "Descripción": "Impuestos y tarifas parametrizables",
@@ -577,7 +578,7 @@ tabla1:[
             "Requisito": "Opcional"
         }
     ],
-    table13:[
+    "table13":[
         {
             "No.": "1",
             "Descripción": "Identificación (Número de RUC, cédula o pasaporte)",
@@ -609,7 +610,7 @@ tabla1:[
             "Requisito": "Opcional"
         }
     ],
-    table14:[
+    "table14":[
         {
             "No.": "1",
             "Descripción de llenado (comprador o agente retenido)": "Número secuencial del comprobante",
@@ -707,7 +708,7 @@ tabla1:[
             "Comprobante": "TODOS"
         }
     ],
-    table15:[
+    "table15":[
         {
             "No.": "1",
             "Descripción de Llenado": "Número secuencial del comprobante",
@@ -863,7 +864,7 @@ tabla1:[
             "Requisito": "Obligatono"
         }
     ],
-    talbe16:[
+    "table16":[
         {
             "Impuesto": "IVA",
             "Código": "2"
@@ -877,7 +878,7 @@ tabla1:[
             "Código": "5"
         }
     ],
-    table17:[
+    "table17":[
         {
             "Porcentaje de IVA": "0%",
             "Código": "0"
@@ -903,7 +904,7 @@ tabla1:[
             "Código": "8"
         }
     ],
-    table18:[
+    "table18":[
         {
             "Código": "3011",
             "Descripción": "ICE Cigarrillos Rubios",
@@ -1512,7 +1513,7 @@ tabla1:[
             "Tarifa Ad Valorem febrero a diciembre 2023": "50%"
         }
     ],
-    table19:[
+    "table19":[
         {
             "Impuesto a retener": "RENTA",
             "Código": "1"
@@ -1526,7 +1527,7 @@ tabla1:[
             "Código": "6"
         }
     ],
-    table20:[
+    "table20":[
         {
             "Porcentaje IVA": "10%",
             "Código": "9"
@@ -1560,7 +1561,7 @@ tabla1:[
             "Código": "8"
         }
     ],
-    table201:[
+    "table201":[
         {
             "\"Porcentaje ISD\"": "5%",
             "Código": "4580",
@@ -1592,7 +1593,7 @@ tabla1:[
             "Hasta": "31 de diciembre de 2022"
         }
     ],
-    table21:[
+    "table21":[
         {
             "No.": "1",
             "Campos de valores": "Sub total IVA _%:",
@@ -1660,13 +1661,13 @@ tabla1:[
             "Requisito": "Obligatorio"
         }
     ],
-    table22:[
+    "table22":[
         {
             "IMPUESTO A RETENER": "IVA PRESUNTIVO Y RENTA",
             "CÓDIGO": "4"
         }
     ],
-    table23:[
+    "table23":[
         {"IVA":[
             {
                 "PORCENTAJE IVA RETENIDO Y/O PRESUNTIVO": "** 100%",
@@ -1703,7 +1704,7 @@ tabla1:[
         ]
     }
     ],
-    tableerror:[
+    "tableerror":[
         {
             "CÓDIGO DE ERROR": "2",
             "DESCRIPCIÓN": "RUC del emisor se encuentra NO ACTIVO.",
@@ -1873,7 +1874,7 @@ tabla1:[
             "VALIDACIÓN: RECEPCIÓN /AUTORIZACIÓN/ EMISOR": "RECEPCIÓN"
         }
     ],
-    tableadvertencia:[
+    "tableadvertencia":[
         {
             "CÓDIGO DE ADVERTENCIA": "59",
             "DESCRIPCIÓN": "Identificación no existe",
@@ -1895,7 +1896,7 @@ tabla1:[
             "POSIBLE SOLUCIÓN": "Cuando el comprobante relacionado no existe como electrónico."
         }
     ],
-    tablevalidacion:[
+    "tablevalidacion":[
         {
             "ORDEN": "1",
             "VALIDACIÓN": "Validación XML",
@@ -1927,7 +1928,7 @@ tabla1:[
             "DESCRIPCIÓN":""
         }
     ],
-    tableerrorvalidacion:[
+    "tableerrorvalidacion":[
         {
             "CÓDIGO DE ERROR": "34",
             "DESCRIPCIÓN": "Comprobante no autorizado",
@@ -1965,7 +1966,7 @@ tabla1:[
             "VALIDACIÓN: RECEPCIÓN/AUTORIZACIÓN/EMISOR": "EMISOR"
         }
     ],
-    tableerrordevolucion:[
+    "tableerrordevolucion":[
         {
             "CÓDIGO DE VALIDACIÓN": "2000 EXITO",
             "DESCRIPCIÓN": "Éxito."
@@ -2103,3 +2104,4 @@ tabla1:[
             "DESCRIPCIÓN": "No existen registros en el canal automático."
         }
     ]
+}

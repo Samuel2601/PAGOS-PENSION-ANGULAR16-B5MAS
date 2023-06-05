@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { Observable } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 @Injectable({
   providedIn: 'root'
 })
@@ -14,7 +16,7 @@ export class ConfigService {
   private nadelegado='';
 
   
-  constructor() {
+  constructor(private _http: HttpClient) {
 
   }
   private dataSubject = new Subject<any[]>();
@@ -72,7 +74,8 @@ export class ConfigService {
     this.rol=rol
   }
 
-
-
+  getsri():Observable<any>{
+		return this._http.get('./assets/sri.json');
+	}
 
 }

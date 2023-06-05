@@ -11164,6 +11164,8 @@ a.text-white:hover {
   border-style: solid;
   padding-top: 0.5rem !important;
   padding-bottom: 0.5rem !important;
+  background-color: #152e4d !important;
+  border-color: #12263f !important;
 }
 .navbar-dark {
   background-color: #152e4d;
@@ -14246,4 +14248,11 @@ button:focus {
   }
   .ngx-file-drop__file-input{
     display:none !important
+  }
+
+  .nav-link:hover{
+    color: #0072ff !important;
+  }
+  .nav-link{
+    color: white !important;
   }

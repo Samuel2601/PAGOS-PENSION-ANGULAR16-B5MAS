@@ -13,6 +13,7 @@ declare var $: any;
 })
 export class SidebarComponent implements OnInit {
 
+	public logo='https://i.postimg.cc/MZnk5rQ3/LOGO-4.png';
 
 	get progress(): number {
 		return this.progressBarService.getProgress();
@@ -43,16 +44,19 @@ export class SidebarComponent implements OnInit {
     // Verifica si el estilo claro está activo
     if (this.lightStylesheet && this.darkStylesheet && this.darkStylesheet) {
       if (tema=='theme-light') {
+		this.logo='https://i.postimg.cc/MZnk5rQ3/LOGO-4.png';
         this.lightStylesheet.disabled = false; // Habilita el estilo claro
         this.cosmicStylesheet.disabled=true;
         this.darkStylesheet.disabled = true; // Deshabilita el estilo oscuro
        
       } else if(tema=='theme-dark') {
+		this.logo='https://i.postimg.cc/2yH7h7DL/LOGO-5.png';
 		this.darkStylesheet.disabled = false; // Habilita el estilo oscuro
 
         this.lightStylesheet.disabled = true; // Deshabilita el estilo claro
         this.cosmicStylesheet.disabled=true;
       }else{
+		this.logo='https://i.postimg.cc/2yH7h7DL/LOGO-5.png';
 		this.cosmicStylesheet.disabled=false;
         this.darkStylesheet.disabled = true; 
         this.lightStylesheet.disabled = true;

@@ -30,6 +30,7 @@ import { PanelAdminComponent } from './components/panel-admin/panel-admin.compon
 
 import { DischargeComponent } from './components/financier/discharge/discharge.component';
 import { SupplierComponent } from './components/financier/supplier/supplier.component';
+import { BillingComponent } from './components/config/billing/billing.component';
 const appRoute: Routes = [
 	{ path: '', redirectTo: 'login', pathMatch: 'full' },
 
@@ -85,6 +86,7 @@ const appRoute: Routes = [
 	{ path: 'pagos/:id', component: ShowPaymentsComponent, canActivate: [AuthGuard] },
 
 	{ path: 'configuraciones', component: SchoolYearConfigComponent, canActivate: [AuthGuard] },
+	{ path: 'facturacion', component: BillingComponent, canActivate: [AuthGuard] },
 
 	/* {path: '**', component: NotFoundComponent}, */
 ];

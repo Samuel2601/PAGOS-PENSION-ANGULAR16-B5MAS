@@ -54,7 +54,7 @@ export class StundesPaymentsComponent implements OnInit {
   public page = 1;
 	public pageSize = 10;
   public pageSize2 = 10;
-
+  public token=localStorage.getItem('token');
   constructor(private _adminService: AdminService, private _configService:ConfigService) {}
 
   private config_sistem=this._configService.getConfig()as { imagen: string, identity: string, token: string , rol:string};
@@ -63,39 +63,41 @@ export class StundesPaymentsComponent implements OnInit {
   ngOnInit(): void {
     this.load_data=true;
     this._configService.setProgress(this._configService.getProgress()+5);
+    try {
 
-    this._adminService.obtener_config_admin(localStorage.getItem('token')).subscribe((responese) => {
-      this.config = responese.data.map((item:any)=>{
-        return{
-          anio_lectivo:item.anio_lectivo,
-          extrapagos:item.extrapagos,
-          label:item.label,
-          matricula:item.matricula,
-          mescompleto	:item.mescompleto,
-          numpension :item.numpension,
-          pension	:item.pension,
-          _id: item._id
-        }
+      this._adminService.obtener_config_admin(this.token).subscribe((responese) => {
+        this.config = responese.data.map((item:any)=>{
+          return{
+            anio_lectivo:item.anio_lectivo,
+            extrapagos:item.extrapagos,
+            matricula:item.matricula,
+            mescompleto	:item.mescompleto,
+            numpension :item.numpension,
+            pension	:item.pension,
+            _id: item._id
+          }
+        });
+        
+
+        this.config.forEach((element:any) => {
+          element.label=this.meses[new Date(element.anio_lectivo).getMonth()] +
+          ' ' +
+          new Date(element.anio_lectivo).getFullYear() +
+          '-' +
+          new Date(
+            new Date(element.anio_lectivo).setFullYear(
+              new Date(element.anio_lectivo).getFullYear() + 1
+            )
+          ).getFullYear()
+        });
+        this.active = -1;
+  
+        this.detalle_data(0);
       });
-      
-      
-      this.config.forEach((element:any) => {
-        element.label=this.meses[new Date(element.anio_lectivo).getMonth()] +
-        ' ' +
-        new Date(element.anio_lectivo).getFullYear() +
-        '-' +
-        new Date(
-          new Date(element.anio_lectivo).setFullYear(
-            new Date(element.anio_lectivo).getFullYear() + 1
-          )
-        ).getFullYear()
-      });
-      this.active = -1;
-      setTimeout(() => {
-        $('#Cargando').modal('show');
-      }, 1000);
-      this.detalle_data(0);
-    });
+    } catch (error) {
+      console.log(error);
+    }
+    
 
 }
 actualizar_estudiante(){
@@ -144,82 +146,72 @@ detalle_data(val: any) {
     this.generarMeses();
     costomatricula = this.config[val].matricula;
     if(this.actualizar_dashest==false&&this.active==0){
-      let sigu=true;
-      //console.log(localStorage.getItem('dia'));
+
       if(localStorage.getItem('dia')){
         this._configService.setProgress(this._configService.getProgress()+10);
         this.horaact=new Date(JSON.parse(localStorage.getItem('dia')||''));
 
         if((new Date().getTime()-new Date(this.horaact).getTime())<3600000&&
-          localStorage.getItem('pagos_estudiante')&&
-          localStorage.getItem('estudiantes')&&
-          localStorage.getItem('arr_becas')&&
-          localStorage.getItem('penest')&&
-          localStorage.getItem('cursos')&&
-          localStorage.getItem('pagospension')&&
+          localStorage.getItem('pagos_estudiante_0')&&
+          localStorage.getItem('estudiantes_0')&&
+          localStorage.getItem('arr_becas_0')&&
+          localStorage.getItem('penest_0')&&
+          localStorage.getItem('cursos_0')&&
+          localStorage.getItem('pagospension_0')&&
           localStorage.getItem('porpagar')&&
           localStorage.getItem('pagado')&&
-          localStorage.getItem('cursos2')&&
-          localStorage.getItem('deteconomico')&&
-          localStorage.getItem('pagospension')){
-
-      
-
-          this.pagos_estudiante = JSON.parse( pako.inflate(new Uint8Array(atob(localStorage.getItem('pagos_estudiante')||'').split('').map(char => char.charCodeAt(0))), { to: 'string' }) );
-          //console.log(this.pagos_estudiante);
-          this.estudiantes = JSON.parse( pako.inflate(new Uint8Array(atob(localStorage.getItem('estudiantes')||'').split('').map(char => char.charCodeAt(0))), { to: 'string' }) );
-          //console.log(this.estudiantes);
-          this.arr_becas = JSON.parse( pako.inflate(new Uint8Array(atob(localStorage.getItem('arr_becas')||'').split('').map(char => char.charCodeAt(0))), { to: 'string' }) );
-          //console.log(this.arr_becas);
-          this.penest = JSON.parse( pako.inflate(new Uint8Array(atob(localStorage.getItem('penest')||'').split('').map(char => char.charCodeAt(0))), { to: 'string' }) );
-          //console.log(this.penest);
-          this.cursos = JSON.parse( pako.inflate(new Uint8Array(atob(localStorage.getItem('cursos')||'').split('').map(char => char.charCodeAt(0))), { to: 'string' }) );
-          //console.log(this.cursos);
-          this.pagospension = JSON.parse( pako.inflate(new Uint8Array(atob(localStorage.getItem('pagospension')||'').split('').map(char => char.charCodeAt(0))), { to: 'string' }) );
-          //console.log(this.pagospension);
-          this.porpagar = JSON.parse( pako.inflate(new Uint8Array(atob(localStorage.getItem('porpagar')||'').split('').map(char => char.charCodeAt(0))), { to: 'string' }) );
-          //console.log(this.porpagar);
-          this.pagado = JSON.parse( pako.inflate(new Uint8Array(atob(localStorage.getItem('pagado')||'').split('').map(char => char.charCodeAt(0))), { to: 'string' }) );
-          //console.log(this.pagado);
-          this.cursos2 = JSON.parse( pako.inflate(new Uint8Array(atob(localStorage.getItem('cursos2')||'').split('').map(char => char.charCodeAt(0))), { to: 'string' }) );
-          //console.log(this.cursos2);
-          this.deteconomico = JSON.parse( pako.inflate(new Uint8Array(atob(localStorage.getItem('deteconomico')||'').split('').map(char => char.charCodeAt(0))), { to: 'string' }) );
-          //console.log(this.deteconomico);
-          this.pagospension = JSON.parse( pako.inflate(new Uint8Array(atob(localStorage.getItem('pagospension')||'').split('').map(char => char.charCodeAt(0))), { to: 'string' }) );
-          //console.log(this.pagospension);
-          sigu=false;
-
-          this._configService.setProgress(this._configService.getProgress()+10);
-
+          localStorage.getItem('cursos2_0')&&
+          localStorage.getItem('deteconomico_0')){
+            this.porpagar = JSON.parse( localStorage.getItem('porpagar')||'' );
+            this.pagado = JSON.parse( localStorage.getItem('pagado')||'');
+            var j=0;
+            do {
+              if(localStorage.getItem('pagos_estudiante_'+j)){
+                this.pagos_estudiante.push(...JSON.parse( pako.inflate(new Uint8Array(atob(localStorage.getItem('pagos_estudiante_'+j)||'').split('').map(char => char.charCodeAt(0))), { to: 'string' }) ));
+              }
+              if(localStorage.getItem('estudiantes_'+j)){
+                this.estudiantes.push(...JSON.parse( pako.inflate(new Uint8Array(atob(localStorage.getItem('estudiantes_'+j)||'').split('').map(char => char.charCodeAt(0))), { to: 'string' }) ));
+              }
+              if(localStorage.getItem('arr_becas_'+j)){
+                this.arr_becas.push(...JSON.parse( pako.inflate(new Uint8Array(atob(localStorage.getItem('arr_becas_'+j)||'').split('').map(char => char.charCodeAt(0))), { to: 'string' }) ));
+              }
+              if(localStorage.getItem('penest_'+j)){
+                this.penest.push(...JSON.parse( pako.inflate(new Uint8Array(atob(localStorage.getItem('penest_'+j)||'').split('').map(char => char.charCodeAt(0))), { to: 'string' }) ));
+              }
+              if(localStorage.getItem('cursos_'+j)){
+                this.cursos.push(...JSON.parse( pako.inflate(new Uint8Array(atob(localStorage.getItem('cursos_'+j)||'').split('').map(char => char.charCodeAt(0))), { to: 'string' }) ));
+              }
+              if(localStorage.getItem('pagospension_'+j)){
+                this.pagospension.push(...JSON.parse( pako.inflate(new Uint8Array(atob(localStorage.getItem('pagospension_'+j)||'').split('').map(char => char.charCodeAt(0))), { to: 'string' }) ));
+              }
+              if(localStorage.getItem('cursos2_'+j)){
+                this.cursos2.push(...JSON.parse( pako.inflate(new Uint8Array(atob(localStorage.getItem('cursos2_'+j)||'').split('').map(char => char.charCodeAt(0))), { to: 'string' }) ));
+              }
+              if(localStorage.getItem('deteconomico_'+j)){
+                this.deteconomico.push(...JSON.parse( pako.inflate(new Uint8Array(atob(localStorage.getItem('deteconomico_'+j)||'').split('').map(char => char.charCodeAt(0))), { to: 'string' }) ));
+              }
+              this._configService.setProgress(this._configService.getProgress()+5);
+              if(!localStorage.getItem('pagos_estudiante_'+j)&&
+                !localStorage.getItem('estudiantes_'+j)&&
+                !localStorage.getItem('arr_becas_'+j)&&
+                !localStorage.getItem('penest_'+j)&&
+                !localStorage.getItem('cursos_'+j)&&
+                !localStorage.getItem('pagospension_'+j)&&
+                !localStorage.getItem('cursos2_'+j)&&
+                !localStorage.getItem('deteconomico_'+j)){
+                  j=-1;
+              }else{
+                j++;
+              }              
+            } while (j>0);
           this.cargar_canvas3(costosextrapagos)
+        }else{
+          this.actualizar_dashest=true;
+          this.armado_matriz(val,costosextrapagos,costopension,costomatricula);
         }
-      }
-      //console.log(sigu);
-      if(sigu){
-        this._adminService.getDashboar_estudiante(localStorage.getItem('token')).subscribe(response=>{
-        
-          if(response.obj!=''&&response.ms=='' &&(new Date().getTime()-new Date(response.obj.dia).getTime())<3600000){
-            //console.log(response.obj.hora);
-            this.horaact=new Date(response.obj.dia);
-            this.pagos_estudiante=response.obj.pagos_estudiante;
-            this.estudiantes=response.obj.estudiantes;
-            this.arr_becas=response.obj.arr_becas;
-            this.penest=response.obj.penest;
-            this.cursos=response.obj.cursos;
-            this.pagospension=response.obj.pagospension;
-            this.porpagar=response.obj.porpagar;
-            this.pagado=response.obj.pagado;
-            this.cursos2=response.obj.cursos2;
-            this.deteconomico=response.obj.deteconomico;
-            this.pagospension=response.obj.pagospension;
-  
-            this.cargar_canvas3(costosextrapagos)
-          }else{
-            this.actualizar_dashest=true;            
-            this.armado_matriz(val,costosextrapagos,costopension,costomatricula);
-          }
-          
-        });
+      }else{
+        this.actualizar_dashest=true;
+        this.armado_matriz(val,costosextrapagos,costopension,costomatricula);
       }
       
     }else{
@@ -242,7 +234,7 @@ ismeses(numes:any){
 armado_matriz(val:any,costosextrapagos:any,costopension:any,costomatricula:any){
   if(this.actualizar_dashest==true){
     this._adminService
-    .obtener_detallespagos_admin(localStorage.getItem('token'), this.config[val].anio_lectivo)
+    .obtener_detallespagos_admin(this.token, this.config[val].anio_lectivo)
     .subscribe((response) => {
       this.estudiantes = response.data.map((item:any)=>{
         return{
@@ -273,7 +265,7 @@ armado_matriz(val:any,costosextrapagos:any,costopension:any,costomatricula:any){
       });
       this._configService.setProgress(this._configService.getProgress()+5);
         //this.nmt=10;
-        this._adminService.obtener_becas_conf(this.config[val]._id, localStorage.getItem('token'))
+        this._adminService.obtener_becas_conf(this.config[val]._id, this.token)
         .subscribe((response) => {
           this.arr_becas=response.becas.map((item:any)=>{
             return{
@@ -286,7 +278,7 @@ armado_matriz(val:any,costosextrapagos:any,costopension:any,costomatricula:any){
             }
           });
           this._configService.setProgress(this._configService.getProgress()+5);
-          this._adminService.listar_pensiones_estudiantes_tienda(localStorage.getItem('token'),this.config[val].anio_lectivo).subscribe((response) => {
+          this._adminService.listar_pensiones_estudiantes_tienda(this.token,this.config[val].anio_lectivo).subscribe((response) => {
             //console.log(response.data);
             this.penest = response.data.map((item:any)=>{
               return{
@@ -780,20 +772,40 @@ guardardashboard_estudiante(){
     this.auxdasboarestudiante.cursos=this.cursos;
     this.auxdasboarestudiante.pagospension=this.pagospension;
     this.auxdasboarestudiante.porpagar=this.porpagar;
-    this.auxdasboarestudiante.pagado=this.pagado;
-    
+    this.auxdasboarestudiante.pagado=this.pagado;    
     this.auxdasboarestudiante.cursos2=this.cursos2;
     this.auxdasboarestudiante.deteconomico=this.deteconomico;
-    this.auxdasboarestudiante.pagospension=this.pagospension;
     
     let fileContent =JSON.stringify(this.auxdasboarestudiante);
     // Convertir objeto a string JSON
     
     this._configService.setProgress(this._configService.getProgress()+10);
 
+    console.log(this.auxdasboarestudiante);
+    for (const key in this.auxdasboarestudiante) {
+      if (Object.prototype.hasOwnProperty.call(this.auxdasboarestudiante, key)) {
+        const element = this.auxdasboarestudiante[key];
+        if (Array.isArray(element)) {
+          const chunkSize = 1500; // Tamaño deseado para cada parte del array
+          var j=0;
+          for (let i = 0; i < element.length; i += chunkSize) {
+            const chunk = element.slice(i, i + chunkSize);
+            localStorage.setItem(key + '_' + j, btoa(String.fromCharCode.apply(null, Array.from(pako.deflate(JSON.stringify(chunk))))));
+            this._configService.setProgress(this._configService.getProgress() + 5);
+            j++;
+          }
+        } else {
+          localStorage.setItem(key, JSON.stringify(element));
+          this._configService.setProgress(this._configService.getProgress() + 5);
+        }
+      }
+    }
+/*
     localStorage.setItem('dia',JSON.stringify(this.auxdasboarestudiante.dia));
     this._configService.setProgress(this._configService.getProgress()+5);
+   
     localStorage.setItem('pagos_estudiante',btoa(String.fromCharCode.apply(null,Array.from(pako.deflate(JSON.stringify(this.auxdasboarestudiante.pagos_estudiante))))));
+    
     this._configService.setProgress(this._configService.getProgress()+5);
     localStorage.setItem('estudiantes',btoa(String.fromCharCode.apply(null, Array.from(pako.deflate(JSON.stringify(this.auxdasboarestudiante.estudiantes))))) );
     this._configService.setProgress(this._configService.getProgress()+5);
@@ -816,13 +828,14 @@ guardardashboard_estudiante(){
     localStorage.setItem('pagospension',btoa(String.fromCharCode.apply(null, Array.from(pako.deflate(JSON.stringify(this.auxdasboarestudiante.pagospension))))) );
     this._configService.setProgress(this._configService.getProgress()+5);
     
-    this._adminService.actualizzas_dash(localStorage.getItem('token'),this.auxdasboarestudiante).subscribe(response=>{
+    this._adminService.actualizzas_dash(this.token,this.auxdasboarestudiante).subscribe(response=>{
       
       console.log("Guardado",response)
       if(response.message=='Guardado con exito'){
         this.horaact=new Date();
       }
     });
+*/
     this._configService.setProgress(100);
     setTimeout(() => {
       this._configService.setProgress(0);
