@@ -131,10 +131,10 @@
                                         <div class="row justify-content-center">
                                             <div class="col-md">
                                                 <div class="row g-2">
-                                                    <label for="inputcodDoc" class="form-label">Tipo de comprobante</label>
+                                                    <label for="inputEmail3" class="form-label">Tipo de comprobante</label>
                                                     <div class="input-group mb-3">                           
                                                         <label class="input-group-text" for="inputGroupSelect01">Opciones (Obligatorio)</label>
-                                                        <select class="form-select" id="inputGroupSelect01" name="nombre" [(ngModel)]="config.codDoc">
+                                                        <select class="form-select" id="inputGroupSelect01" name="comprobante" [(ngModel)]="config.codDoc">
                                                             <option selected>Seleccionar...</option>
                                                             <ng-container *ngFor="let item of sri.tabla3">
                                                                 <option value="{{item['Código']}}">{{item['Código']}} {{item['Nombre comprobante']}}</option>
@@ -183,10 +183,9 @@
                                             <div class="col-md">
                                                 <div class="row g-2">
                                                     <label for="inputEmail3" class="form-label">Tipo de ambiente</label>
-                                                    <div class="input-group mb-3">
-                                                        
-                                                        <label class="input-group-text" for="inputGroupSelect01">Opciones (Obligatorio)</label>
-                                                        <select class="form-select" id="inputGroupSelect01" name="nombre" [(ngModel)]="config.ambiente">
+                                                    <div class="input-group mb-3">                                                        
+                                                        <label class="input-group-text" for="inputGroupSelect02">Opciones (Obligatorio)</label>
+                                                        <select class="form-select" id="inputGroupSelect02" name="ambiente" [(ngModel)]="config.ambiente">
                                                             <option selected>Seleccionar...</option>
                                                             <ng-container *ngFor="let item of sri.tabla4">
                                                                 <option value="{{item['Código']}}">{{item['Código']}} {{item['Tipo de ambiente']}}</option>

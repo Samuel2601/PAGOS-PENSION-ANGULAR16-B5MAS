@@ -12,67 +12,91 @@ export class BillingComponent implements OnInit {
   }
   public config:any={}
   public sri:any={};
+  public token = localStorage.getItem('token');
+  public file:any;
   ngOnInit(): void {
     this._configservie.getsri().subscribe(response=>{      
       if(response){
         this.sri=response;
-        console.log(this.sri);
+		console.log(response);
+		this._configservie.get_conf_facturacion(this.token).subscribe(response=>{      
+			if(response){			  
+			  console.log(response);
+			  this.config=response.data
+			  this.config.password='';
+			  this.config.correo_password='';
+			  this.file=undefined
+			  $('#input-portada').text(this.config.archivo);
+			}
+		  });
       }
     });
   }
   actualizar(actualizarForm: any) {
-    console.log(this.config);
+    if(actualizarForm.valid){
+		console.log(this.config);
+		
+		this._configservie.actualizar_conf_facturacion(this.config,this.file,this.token).subscribe(response=>{
+			console.log(response);
+			if(response.message){
+				iziToast.info({
+					title: 'RES',
+					position: 'topRight',
+					message: response.message,
+				});
+			}
+		});
+	}else{
+		iziToast.warning({
+			title: 'Peligro',
+			position: 'topRight',
+			message: 'Hay valores vacios',
+		});
+	}
   }
   fileChangeEvent(event: any): void {
 		var file: any;
 		if (event.target.files && event.target.files[0]) {
 			file = <File>event.target.files[0];
 		} else {
-			iziToast.show({
+			iziToast.error({
 				title: 'ERROR',
-				titleColor: '#FF0000',
-				color: '#FFF',
-				class: 'text-danger',
 				position: 'topRight',
-				message: 'No hay un imagen de envio',
+				message: 'No hay un archivo.p12 de envio',
 			});
 		}
 
 		if (file.size <= 4000000) {
       if (file.type == 'application/x-pkcs12' || file.type == 'application/octet-stream') {
 				const reader = new FileReader();
-				reader.onload = (e) => (this.config.archivo = reader.result);
+				reader.onload = (e) => (this.file = reader.result);
 				// console.log(this.imgSelect);
 
 				reader.readAsDataURL(file);
-
-				$('#input-portada').text(file.name);
-				this.config.archivo = file;
+				const archivoName = file.name.replace(/ /g, '_');
+				this.config.archivo_name = archivoName;
+				$('#input-portada').text(archivoName);
+				
+				this.file = file;
 			} else {
-				iziToast.show({
+				iziToast.error({
 					title: 'ERROR',
-					titleColor: '#FF0000',
-					color: '#FFF',
-					class: 'text-danger',
 					position: 'topRight',
 					message: 'El archivo debe ser un archivo tipo .p12',
 				});
 				$('#input-portada').text('Seleccionar imagen');
 				//this.imgSelect = 'assets/img/01.jpg';
-				this.config.archivo = undefined;
+				this.file = undefined;
 			}
 		} else {
-			iziToast.show({
+			iziToast.error({
 				title: 'ERROR',
-				titleColor: '#FF0000',
-				color: '#FFF',
-				class: 'text-danger',
 				position: 'topRight',
 				message: 'La imagen no puede superar los 4MB',
 			});
 			$('#input-portada').text('Seleccionar imagen');
 			//this.imgSelect = 'assets/img/01.jpg';
-			this.config.archivo = undefined;
+			this.file = undefined;
 		}
 		// console.log(this.file);
 	}
